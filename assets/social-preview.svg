@@ -1,80 +1,81 @@
 <svg width="1280" height="640" viewBox="0 0 1280 640" role="img" xmlns="http://www.w3.org/2000/svg" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Helvetica, Arial, sans-serif">
-<title>haploqtl</title><desc>Local-ancestry inference for fine-mapping QTL and finding trait donors.</desc>
-<defs><linearGradient id="bg" x1="0" y1="0" x2="0.5" y2="1"><stop offset="0" stop-color="#0c1426"/><stop offset="1" stop-color="#091016"/></linearGradient>
-<linearGradient id="coral" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#f5805a"/><stop offset="1" stop-color="#ef5e6b"/></linearGradient></defs>
-<rect x="0" y="0" width="1280" height="640" fill="url(#bg)"/>
-<rect x="600" y="342" width="145" height="184" fill="#2dd4bf" opacity="0.07"/>
-<text x="640" y="152" text-anchor="middle" font-size="120" font-weight="700" letter-spacing="-3" fill="#eaf1f8">haplo<tspan fill="#2dd4bf">qtl</tspan></text>
-<text x="640" y="198" text-anchor="middle" font-size="24" fill="#9bb0c4">Local-ancestry inference for fine-mapping QTL and finding trait donors</text>
-<rect x="354" y="224" width="170" height="40" rx="20" fill="#ffffff" opacity="0.05"/>
-<rect x="354" y="224" width="170" height="40" rx="20" fill="none" stroke="#ffffff" stroke-opacity="0.14"/>
-<circle cx="378" cy="244" r="4.5" fill="#2dd4bf"/>
-<text x="394" y="250" font-size="18" fill="#dbe6f0">780 genomes</text>
-<rect x="540" y="224" width="195" height="40" rx="20" fill="#ffffff" opacity="0.05"/>
-<rect x="540" y="224" width="195" height="40" rx="20" fill="none" stroke="#ffffff" stroke-opacity="0.14"/>
-<circle cx="564" cy="244" r="4.5" fill="#ef6a55"/>
-<text x="580" y="250" font-size="18" fill="#dbe6f0">70% tighter QTL</text>
-<rect x="751" y="224" width="175" height="40" rx="20" fill="#ffffff" opacity="0.05"/>
-<rect x="751" y="224" width="175" height="40" rx="20" fill="none" stroke="#ffffff" stroke-opacity="0.14"/>
-<circle cx="775" cy="244" r="4.5" fill="#34d399"/>
-<text x="791" y="250" font-size="18" fill="#dbe6f0">185 MAS markers</text>
-<text x="640" y="306" text-anchor="middle" font-size="18" fill="#9bb0c4">Tracing EB-9 to the heirloom 'Devon Surprise'</text>
-<text x="672" y="330" text-anchor="middle" font-size="15" fill="#7fe0cf">EB-9 · chr9 62.4–63.0 Mb</text>
-<path d="M600 340 V336 H745 V340" fill="none" stroke="#2dd4bf" stroke-width="1.2"/>
-<rect x="445" y="348" width="500" height="16" rx="7" fill="#1c2b3d"/>
-<rect x="585" y="348" width="180" height="16" rx="6" fill="url(#coral)"/>
-<text x="433" y="361" text-anchor="end" font-size="18" fill="#f5a08c">Devon Surprise</text>
-<rect x="445" y="378" width="500" height="16" rx="7" fill="#1c2b3d"/>
-<rect x="595" y="378" width="160" height="16" rx="6" fill="url(#coral)"/>
-<text x="433" y="391" text-anchor="end" font-size="18" fill="#cdd9e4">Campbell 1943</text>
-<rect x="445" y="408" width="500" height="16" rx="7" fill="#1c2b3d"/>
-<rect x="600" y="408" width="150" height="16" rx="6" fill="url(#coral)"/>
-<text x="433" y="421" text-anchor="end" font-size="18" fill="#cdd9e4">NC EBR 2</text>
-<rect x="445" y="438" width="500" height="16" rx="7" fill="#1c2b3d"/>
-<rect x="600" y="438" width="145" height="16" rx="6" fill="url(#coral)"/>
-<text x="433" y="451" text-anchor="end" font-size="18" fill="#cdd9e4">NC 1 CELBR</text>
-<rect x="445" y="468" width="500" height="16" rx="7" fill="#1c2b3d"/>
-<rect x="600" y="468" width="145" height="16" rx="6" fill="none" stroke="#39495c" stroke-dasharray="4 4"/>
-<text x="433" y="481" text-anchor="end" font-size="18" fill="#6b7f93">NC EBR 1</text>
-<rect x="445" y="498" width="500" height="16" rx="7" fill="#1c2b3d"/>
-<rect x="600" y="498" width="145" height="16" rx="6" fill="none" stroke="#39495c" stroke-dasharray="4 4"/>
-<text x="433" y="511" text-anchor="end" font-size="18" fill="#6b7f93">Brandywine</text>
-<text x="433" y="544" text-anchor="end" font-size="16" fill="#9bb0c4">candidate genes</text>
-<rect x="612.0" y="534" width="3.4" height="12" fill="#34d399"/>
-<rect x="636.2" y="534" width="3.4" height="12" fill="#34d399"/>
-<rect x="660.4" y="534" width="3.4" height="12" fill="#34d399"/>
-<rect x="684.6" y="534" width="3.4" height="12" fill="#34d399"/>
-<rect x="708.8" y="534" width="3.4" height="12" fill="#34d399"/>
-<rect x="733.0" y="534" width="3.4" height="12" fill="#34d399"/>
-<text x="433" y="578" text-anchor="end" font-size="16" fill="#9bb0c4">diagnostic markers</text>
-<rect x="600.0" y="568" width="2" height="10" fill="#4fd1c5"/>
-<rect x="605.8" y="568" width="2" height="10" fill="#4fd1c5"/>
-<rect x="611.6" y="568" width="2" height="10" fill="#4fd1c5"/>
-<rect x="617.4" y="568" width="2" height="10" fill="#4fd1c5"/>
-<rect x="623.2" y="568" width="2" height="10" fill="#4fd1c5"/>
-<rect x="629.0" y="568" width="2" height="10" fill="#4fd1c5"/>
-<rect x="634.8" y="568" width="2" height="10" fill="#4fd1c5"/>
-<rect x="640.6" y="568" width="2" height="10" fill="#4fd1c5"/>
-<rect x="646.4" y="568" width="2" height="10" fill="#4fd1c5"/>
-<rect x="652.2" y="568" width="2" height="10" fill="#4fd1c5"/>
-<rect x="658.0" y="568" width="2" height="10" fill="#4fd1c5"/>
-<rect x="663.8" y="568" width="2" height="10" fill="#4fd1c5"/>
-<rect x="669.6" y="568" width="2" height="10" fill="#4fd1c5"/>
-<rect x="675.4" y="568" width="2" height="10" fill="#4fd1c5"/>
-<rect x="681.2" y="568" width="2" height="10" fill="#4fd1c5"/>
-<rect x="687.0" y="568" width="2" height="10" fill="#4fd1c5"/>
-<rect x="692.8" y="568" width="2" height="10" fill="#4fd1c5"/>
-<rect x="698.6" y="568" width="2" height="10" fill="#4fd1c5"/>
-<rect x="704.4" y="568" width="2" height="10" fill="#4fd1c5"/>
-<rect x="710.2" y="568" width="2" height="10" fill="#4fd1c5"/>
-<rect x="716.0" y="568" width="2" height="10" fill="#4fd1c5"/>
-<rect x="721.8" y="568" width="2" height="10" fill="#4fd1c5"/>
-<rect x="727.6" y="568" width="2" height="10" fill="#4fd1c5"/>
-<rect x="733.4" y="568" width="2" height="10" fill="#4fd1c5"/>
-<rect x="739.2" y="568" width="2" height="10" fill="#4fd1c5"/>
-<rect x="745.0" y="568" width="2" height="10" fill="#4fd1c5"/>
-<text x="773" y="578" font-size="18" font-weight="500" fill="#7fe0cf">185</text>
-<rect x="520" y="602" width="16" height="12" rx="2" fill="url(#coral)"/><text x="544" y="612" font-size="16" fill="#9bb0c4">resistant</text>
-<rect x="648" y="602" width="16" height="12" rx="2" fill="#1c2b3d" stroke="#39495c"/><text x="672" y="612" font-size="16" fill="#9bb0c4">susceptible</text>
-<text x="640" y="632" text-anchor="middle" font-size="13" fill="#5f7186">Method: Anderson et al. 2024 · The Plant Journal</text>
+<title>haploqtl</title><desc>EB-9 introgression decay drawn to SL4.0 chromosome-9 scale.</desc>
+<defs><linearGradient id="bg" x1="0" y1="0" x2="0.5" y2="1"><stop offset="0" stop-color="#0c1426"/><stop offset="1" stop-color="#091016"/></linearGradient><linearGradient id="coral" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#f5805a"/><stop offset="1" stop-color="#ef5e6b"/></linearGradient></defs>
+<rect width="1280" height="640" fill="url(#bg)"/>
+<text x="640" y="112" text-anchor="middle" font-size="92" font-weight="700" letter-spacing="-2" fill="#eaf1f8">haplo<tspan fill="#2dd4bf">qtl</tspan></text>
+<text x="640" y="156" text-anchor="middle" font-size="22" fill="#9bb0c4">Local-ancestry inference for fine-mapping QTL and finding trait donors</text>
+<rect x="317" y="180" width="180" height="34" rx="17" fill="#ffffff" opacity="0.05"/><rect x="317" y="180" width="180" height="34" rx="17" fill="none" stroke="#ffffff" stroke-opacity="0.14"/>
+<circle cx="337" cy="197" r="4" fill="#2dd4bf"/><text x="353" y="203" font-size="15" fill="#dbe6f0">780 genomes</text>
+<rect x="515" y="180" width="230" height="34" rx="17" fill="#ffffff" opacity="0.05"/><rect x="515" y="180" width="230" height="34" rx="17" fill="none" stroke="#ffffff" stroke-opacity="0.14"/>
+<circle cx="535" cy="197" r="4" fill="#ef6a55"/><text x="551" y="203" font-size="15" fill="#dbe6f0">70% tighter interval</text>
+<rect x="763" y="180" width="200" height="34" rx="17" fill="#ffffff" opacity="0.05"/><rect x="763" y="180" width="200" height="34" rx="17" fill="none" stroke="#ffffff" stroke-opacity="0.14"/>
+<circle cx="783" cy="197" r="4" fill="#34d399"/><text x="799" y="203" font-size="15" fill="#dbe6f0">185 MAS markers</text>
+<text x="640" y="258" text-anchor="middle" font-size="18" fill="#9bb0c4">Introgression decay fine-maps EB-9 to its donor 'Devon Surprise'</text>
+<rect x="605.1" y="290" width="115.5" height="212" fill="#2dd4bf" opacity="0.10"/>
+<path d="M605.1 290 V286 H720.6 V290" fill="none" stroke="#2dd4bf" stroke-width="1"/>
+<text x="662.9" y="280" text-anchor="middle" font-size="13" fill="#7fe0cf">EB-9 · SL4.0ch09:62.45–63.00 Mb</text>
+<rect x="300" y="296" width="840" height="15" rx="7.5" fill="#1c2b3d"/>
+<rect x="327.3" y="296" width="812.7" height="15" rx="6.5" fill="url(#coral)"/>
+<text x="290" y="309" text-anchor="end" font-size="16" fill="#f5a08c">Devon Surprise</text>
+<rect x="300" y="326" width="840" height="15" rx="7.5" fill="#1c2b3d"/>
+<rect x="327.3" y="326" width="504.0" height="15" rx="6.5" fill="url(#coral)"/>
+<text x="290" y="339" text-anchor="end" font-size="16" fill="#cdd9e4">Campbell 1943</text>
+<rect x="300" y="356" width="840" height="15" rx="7.5" fill="#1c2b3d"/>
+<rect x="327.3" y="356" width="504.0" height="15" rx="6.5" fill="url(#coral)"/>
+<text x="290" y="369" text-anchor="end" font-size="16" fill="#cdd9e4">NC EBR 2</text>
+<rect x="300" y="386" width="840" height="15" rx="7.5" fill="#1c2b3d"/>
+<rect x="621.3" y="386" width="105.0" height="15" rx="6.5" fill="url(#coral)"/>
+<text x="290" y="399" text-anchor="end" font-size="16" fill="#cdd9e4">NC 1 CELBR</text>
+<rect x="300" y="416" width="840" height="15" rx="7.5" fill="#1c2b3d"/>
+<rect x="579.3" y="416" width="105.0" height="15" rx="6.5" fill="url(#coral)"/>
+<text x="290" y="429" text-anchor="end" font-size="16" fill="#cdd9e4">CU151095-146</text>
+<rect x="300" y="446" width="840" height="15" rx="7.5" fill="#1c2b3d"/>
+<rect x="390.3" y="446" width="42.0" height="15" rx="6.5" fill="url(#coral)"/>
+<text x="290" y="459" text-anchor="end" font-size="16" fill="#6b7f93">NC EBR 1</text>
+<rect x="300" y="476" width="840" height="15" rx="7.5" fill="#1c2b3d"/>
+<rect x="390.3" y="476" width="42.0" height="15" rx="6.5" fill="url(#coral)"/>
+<text x="290" y="489" text-anchor="end" font-size="16" fill="#6b7f93">Brandywine</text>
+<line x1="300" y1="512" x2="1140" y2="512" stroke="#2a3a4c"/>
+<line x1="300.0" y1="512" x2="300.0" y2="517" stroke="#2a3a4c"/><text x="300.0" y="529" text-anchor="middle" font-size="13" fill="#9bb0c4">61</text>
+<line x1="510.0" y1="512" x2="510.0" y2="517" stroke="#2a3a4c"/><text x="510.0" y="529" text-anchor="middle" font-size="13" fill="#9bb0c4">62</text>
+<line x1="720.0" y1="512" x2="720.0" y2="517" stroke="#2a3a4c"/><text x="720.0" y="529" text-anchor="middle" font-size="13" fill="#9bb0c4">63</text>
+<line x1="930.0" y1="512" x2="930.0" y2="517" stroke="#2a3a4c"/><text x="930.0" y="529" text-anchor="middle" font-size="13" fill="#9bb0c4">64</text>
+<line x1="1140.0" y1="512" x2="1140.0" y2="517" stroke="#2a3a4c"/><text x="1140.0" y="529" text-anchor="middle" font-size="13" fill="#9bb0c4">65 Mb</text>
+<text x="290" y="508" text-anchor="end" font-size="13" fill="#6b7f93">SL4.0ch09</text>
+<rect x="619.2" y="543" width="2.6" height="9" fill="#34d399"/>
+<rect x="641.5" y="543" width="2.6" height="9" fill="#34d399"/>
+<rect x="671.9" y="543" width="2.6" height="9" fill="#34d399"/>
+<rect x="673.0" y="543" width="2.6" height="9" fill="#34d399"/>
+<rect x="681.8" y="543" width="2.6" height="9" fill="#34d399"/>
+<rect x="685.4" y="543" width="2.6" height="9" fill="#34d399"/>
+<rect x="691.9" y="543" width="2.6" height="9" fill="#34d399"/>
+<rect x="705.9" y="543" width="2.6" height="9" fill="#34d399"/>
+<text x="748" y="551" font-size="13" fill="#9bb0c4">candidate genes (8): F-box, K+ transporters, oxidoreductases</text>
+<rect x="605.1" y="570" width="1.8" height="8" fill="#4fd1c5"/>
+<rect x="610.2" y="570" width="1.8" height="8" fill="#4fd1c5"/>
+<rect x="615.2" y="570" width="1.8" height="8" fill="#4fd1c5"/>
+<rect x="620.2" y="570" width="1.8" height="8" fill="#4fd1c5"/>
+<rect x="625.2" y="570" width="1.8" height="8" fill="#4fd1c5"/>
+<rect x="630.2" y="570" width="1.8" height="8" fill="#4fd1c5"/>
+<rect x="635.3" y="570" width="1.8" height="8" fill="#4fd1c5"/>
+<rect x="640.3" y="570" width="1.8" height="8" fill="#4fd1c5"/>
+<rect x="645.3" y="570" width="1.8" height="8" fill="#4fd1c5"/>
+<rect x="650.3" y="570" width="1.8" height="8" fill="#4fd1c5"/>
+<rect x="655.3" y="570" width="1.8" height="8" fill="#4fd1c5"/>
+<rect x="660.4" y="570" width="1.8" height="8" fill="#4fd1c5"/>
+<rect x="665.4" y="570" width="1.8" height="8" fill="#4fd1c5"/>
+<rect x="670.4" y="570" width="1.8" height="8" fill="#4fd1c5"/>
+<rect x="675.4" y="570" width="1.8" height="8" fill="#4fd1c5"/>
+<rect x="680.5" y="570" width="1.8" height="8" fill="#4fd1c5"/>
+<rect x="685.5" y="570" width="1.8" height="8" fill="#4fd1c5"/>
+<rect x="690.5" y="570" width="1.8" height="8" fill="#4fd1c5"/>
+<rect x="695.5" y="570" width="1.8" height="8" fill="#4fd1c5"/>
+<rect x="700.5" y="570" width="1.8" height="8" fill="#4fd1c5"/>
+<rect x="705.6" y="570" width="1.8" height="8" fill="#4fd1c5"/>
+<rect x="710.6" y="570" width="1.8" height="8" fill="#4fd1c5"/>
+<rect x="715.6" y="570" width="1.8" height="8" fill="#4fd1c5"/>
+<rect x="720.6" y="570" width="1.8" height="8" fill="#4fd1c5"/>
+<text x="748" y="577" font-size="13" fill="#9bb0c4">185 candidate MAS markers — SNPs diagnostic of the EB-9 haplotype</text>
+<rect x="300" y="600" width="16" height="12" rx="2" fill="url(#coral)"/><text x="324" y="610" font-size="13" fill="#9bb0c4">shares Devon Surprise haplotype</text>
+<text x="980" y="610" text-anchor="middle" font-size="13" fill="#5f7186">Anderson et al. 2024 · The Plant Journal</text>
 </svg>
