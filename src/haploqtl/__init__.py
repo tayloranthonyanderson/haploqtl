@@ -11,7 +11,7 @@ https://doi.org/10.1111/tpj.16495
 
 from __future__ import annotations
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 from .cluster import WindowClustering, cluster_haplotypes, select_distance_threshold
 from .io import GenotypeData, load_genotypes

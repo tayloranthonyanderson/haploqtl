@@ -21,12 +21,12 @@ Genomes are grouped into **local haplotypes** along a stepped, sliding genomic w
 
 ## Status & roadmap
 
-This repository is under active development. **Phases 0–1 are complete**: a typed, tested `haploqtl` package with a real CLI, reproducible from a clean `git clone` against a bundled fixture.
+This repository is under active development. **Phases 0–2 are complete**: a typed, tested `haploqtl` package with a real CLI, plus an Agent Skill that interprets a fine-mapped interval into candidate genes and MAS markers — all reproducible from a clean `git clone`.
 
 - [x] **Phase 0 — Foundations & provenance.** Packaged project, pinned environment, CI, bundled chr09 fixture, reproducible demo, vendored reference implementation.
 - [x] **Phase 1 — Modernized core.** Reference script refactored into a typed, tested, documented `haploqtl` package with a real CLI. Two latent bugs in the reference fixed: the silhouette search no longer aborts to a fixed fallback threshold on a single degenerate distance, and the final genomic window is no longer dropped.
-- [ ] **Phase 2 — Agent Skill.** A candidate-gene interpretation skill: interval → genes/annotations → literature-grounded hypotheses → marker-assisted-selection markers → breeder report.
-- [ ] **Phase 3 — Database connector.** Wire the candidate-gene workflow to standard genomics databases (Ensembl / NCBI / Sol Genomics Network).
+- [x] **Phase 2 — Agent Skill.** [`qtl-candidate-gene`](skills/qtl-candidate-gene/) — interval → candidate genes (ITAG4.1) → protein function (live UniProt) → diagnostic MAS markers → breeder report. Authored in Anthropic's Agent Skill (`SKILL.md`) format.
+- [ ] **Phase 3 — Database connector.** Wire the candidate-gene workflow to standard genomics databases (NCBI / UniProt / Sol Genomics Network) as a reusable MCP connector.
 - [ ] **Phase 4 — Evaluation benchmark.** A verifiable-reward benchmark scoring agents on interval recovery, resistance prediction, and candidate-gene identification against the paper's validated ground truth.
 
 ## Quickstart
@@ -53,16 +53,28 @@ uv run haploqtl cluster data/SL4.0ch09_subset.vcf.gz \
 
 The merge-distance threshold is auto-tuned per window (`--d-min/--d-max/--d-step` set the search grid). Output is a tidy long table — one row per (window, sample) with columns `chromosome, position, sample, cluster, distance_threshold, PC1..PCk`. See `uv run haploqtl cluster --help` for all options.
 
+## Agent Skill: `qtl-candidate-gene`
+
+An [Agent Skill](skills/qtl-candidate-gene/) (in Anthropic's `SKILL.md` format) that interprets a fine-mapped interval the way a geneticist would — turning coordinates into biology:
+
+1. **Genes in the interval** — from a bundled SGN **ITAG4.1** slice (SL4.0), paper-exact `Solyc` IDs + functional descriptions.
+2. **Protein function** — live **UniProt** REST query (the genes-to-function database step).
+3. **Diagnostic MAS markers** — variants present in all resistant donors and absent from all susceptible controls, computed from the VCF (reproducing the paper's contrast).
+4. **Synthesis** — a ranked, mechanistically-reasoned candidate-gene report + marker table.
+
+On the EB-9 interval it recovers exactly the gene families the paper highlighted (potassium transporters, F-box, cation efflux, metal-tolerance, Fe(II)-oxygenase) and 185 diagnostic markers whose first position coincides with the paper's chromosome-painting boundary. See the [worked example](skills/qtl-candidate-gene/EXAMPLE.md).
+
 ## Repository layout
 
 ```
 haploqtl/
 ├── src/haploqtl/      # io.py (VCF→dosage), windows.py (sliding windows),
 │                      # cluster.py (silhouette-tuned Ward clustering), cli.py
+├── skills/            # qtl-candidate-gene Agent Skill (SKILL.md + scripts + references)
 ├── legacy/            # vendored, attributed reference script from the published paper
 ├── data/              # bundled chr09 fixture (780 genomes) + accession name map
 ├── scripts/           # run_demo.sh — reproduce a minimal EB-9 result
-├── tests/             # unit (windows, clustering), CLI, and legacy-baseline tests
+├── tests/             # unit, CLI, skill, and legacy-baseline tests
 └── .github/workflows/ # CI: lint + format + type-check + test on Python 3.11 & 3.12
 ```
 

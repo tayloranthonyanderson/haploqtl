@@ -1,0 +1,4 @@
+# Dependencies for the diagnostic_variants.py script.
+# genes_in_interval.py and gene_function.py use only the Python standard library.
+scikit-allel>=1.3.7
+numpy>=1.24
