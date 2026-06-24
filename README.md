@@ -21,10 +21,10 @@ Genomes are grouped into **local haplotypes** along a stepped, sliding genomic w
 
 ## Status & roadmap
 
-This repository is under active development. **Phase 0 is complete**: the pipeline is reproducible from a clean `git clone` against a bundled fixture, with packaging, tests, and CI in place.
+This repository is under active development. **Phases 0–1 are complete**: a typed, tested `haploqtl` package with a real CLI, reproducible from a clean `git clone` against a bundled fixture.
 
 - [x] **Phase 0 — Foundations & provenance.** Packaged project, pinned environment, CI, bundled chr09 fixture, reproducible demo, vendored reference implementation.
-- [ ] **Phase 1 — Modernized core.** Refactor the reference script into a typed, tested, documented `haploqtl` package with a real CLI.
+- [x] **Phase 1 — Modernized core.** Reference script refactored into a typed, tested, documented `haploqtl` package with a real CLI. Two latent bugs in the reference fixed: the silhouette search no longer aborts to a fixed fallback threshold on a single degenerate distance, and the final genomic window is no longer dropped.
 - [ ] **Phase 2 — Agent Skill.** A candidate-gene interpretation skill: interval → genes/annotations → literature-grounded hypotheses → marker-assisted-selection markers → breeder report.
 - [ ] **Phase 3 — Database connector.** Wire the candidate-gene workflow to standard genomics databases (Ensembl / NCBI / Sol Genomics Network).
 - [ ] **Phase 4 — Evaluation benchmark.** A verifiable-reward benchmark scoring agents on interval recovery, resistance prediction, and candidate-gene identification against the paper's validated ground truth.
@@ -42,16 +42,28 @@ uv run bash scripts/run_demo.sh     # reproduce a minimal EB-9 result on the fix
 
 The demo runs windowed haplotype clustering over the bundled **780-genome chr09 fixture** (~4 Mb spanning the EB-9 QTL) and writes per-window haplotype-cluster tables to `output/`. Run the test suite with `uv run pytest`.
 
+### CLI
+
+```bash
+uv run haploqtl cluster data/SL4.0ch09_subset.vcf.gz \
+    --chrom ch09 --window 250000 --step 100000 \
+    --d-min 2 --d-max 80 --d-step 10 \
+    --output output/ch09_haplotypes.csv
+```
+
+The merge-distance threshold is auto-tuned per window (`--d-min/--d-max/--d-step` set the search grid). Output is a tidy long table — one row per (window, sample) with columns `chromosome, position, sample, cluster, distance_threshold, PC1..PCk`. See `uv run haploqtl cluster --help` for all options.
+
 ## Repository layout
 
 ```
 haploqtl/
-├── src/haploqtl/      # package home (Phase 1 clean implementation lands here)
+├── src/haploqtl/      # io.py (VCF→dosage), windows.py (sliding windows),
+│                      # cluster.py (silhouette-tuned Ward clustering), cli.py
 ├── legacy/            # vendored, attributed reference script from the published paper
 ├── data/              # bundled chr09 fixture (780 genomes) + accession name map
 ├── scripts/           # run_demo.sh — reproduce a minimal EB-9 result
-├── tests/             # pipeline smoke / schema-contract tests
-└── .github/workflows/ # CI: lint + format + test on Python 3.11 & 3.12
+├── tests/             # unit (windows, clustering), CLI, and legacy-baseline tests
+└── .github/workflows/ # CI: lint + format + type-check + test on Python 3.11 & 3.12
 ```
 
 ## Citation
