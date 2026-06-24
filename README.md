@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/banner.svg" alt="haploqtl — local-ancestry inference for fine-mapping QTL and finding trait donors" width="100%">
+</p>
+
 # haploqtl
 
 [![CI](https://github.com/tayloranthonyanderson/haploqtl/actions/workflows/ci.yml/badge.svg)](https://github.com/tayloranthonyanderson/haploqtl/actions/workflows/ci.yml)
