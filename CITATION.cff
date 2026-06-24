@@ -1,0 +1,31 @@
+cff-version: 1.2.0
+message: "If you use this software or method, please cite the paper below."
+title: "haploqtl: reproducible, AI-augmented local-ancestry inference for QTL discovery"
+authors:
+  - family-names: Anderson
+    given-names: Taylor A.
+repository-code: "https://github.com/tayloranthonyanderson/haploqtl"
+license: MIT
+preferred-citation:
+  type: article
+  title: "Detection of trait donors and QTL boundaries for early blight resistance using local ancestry inference in a library of genomic sequences for tomato"
+  authors:
+    - family-names: Anderson
+      given-names: Taylor A.
+    - family-names: Sudermann
+      given-names: Martha A.
+    - family-names: DeJong
+      given-names: Darlene M.
+    - family-names: Francis
+      given-names: David M.
+    - family-names: Smart
+      given-names: Christine D.
+    - family-names: Mutschler
+      given-names: Martha A.
+  journal: "The Plant Journal"
+  year: 2024
+  volume: 117
+  issue: 2
+  start: 404
+  end: 415
+  doi: "10.1111/tpj.16495"

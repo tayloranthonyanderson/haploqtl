@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# Environments
+.venv/
+.env
+
+# uv
+# (uv.lock IS committed for reproducibility)
+
+# Caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Demo / analysis outputs (never commit generated data)
+output/
+
+# OS
+.DS_Store
