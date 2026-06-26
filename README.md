@@ -12,6 +12,8 @@
 
 `haploqtl` turns a library of whole-genome sequences into actionable breeding intelligence. It detects cryptic ancestral introgressions, narrows the genomic intervals of quantitative trait loci (QTL), traces those loci to their historical donor cultivars, and predicts the trait in untested gene-bank accessions — without the need for purpose-built mapping populations.
 
+> *Personal project, built on my own time and equipment using publicly available or self-collected data. Not affiliated with, funded by, or derived from any employer's work, data, or systems.*
+
 > **Provenance.** This project modernizes and extends the method published in
 > Anderson *et al.* (2024), *The Plant Journal* — [doi:10.1111/tpj.16495](https://doi.org/10.1111/tpj.16495),
 > on which I am first author. The original research scripts live at
