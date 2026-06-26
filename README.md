@@ -23,6 +23,35 @@
 
 Genomes are grouped into **local haplotypes** along a stepped, sliding genomic window using **Ward hierarchical agglomerative clustering**. The merge-distance threshold is not fixed: for each window it is **auto-tuned by maximizing the mean silhouette coefficient**, so the number of haplotype clusters emerges from the genetic variance present in that window. This needs no genetic map, no reference panel, and no pre-specified number of ancestral groups — and it scales to hundreds of genomes in hours. In the source paper it fine-mapped two early-blight resistance QTL (a 70% and 56% reduction in interval size), traced them to the cultivars *Devon Surprise* and *Hawaii 7998*, and predicted resistance that was then **experimentally confirmed** in gene-bank accessions.
 
+## Pipeline
+
+```mermaid
+flowchart LR
+  V["780-genome VCF"] --> C["Windowed Ward clustering (silhouette-tuned)"]
+  C --> H["Local haplotypes"]
+  H --> Q["Fine-mapped QTL + introgression decay"]
+  Q --> S["qtl-candidate-gene skill"]
+  S --> G["Genes - ITAG4.1"]
+  S --> U["Function - UniProt"]
+  S --> M["Diagnostic MAS markers"]
+  G --> R["Breeder-facing report"]
+  U --> R
+  M --> R
+```
+
+## Results
+
+**Reproduced by this repository** on the bundled 780-genome panel (chromosome 9):
+
+- **EB-9 traced to a 1920s heirloom.** The stem/collar-rot locus traces to *Devon Surprise*; its introgression is shared across the resistant breeding pedigree and absent from the susceptible controls. The block decays from the full donor haplotype (3.9 Mb) to ~0.5 Mb over the EB-9 core in modern lines — the recombination decay that makes the fine-mapping possible (see banner).
+- **185 candidate MAS markers** — SNPs present in every resistant donor and absent from every susceptible control across the EB-9 interval (`SL4.0ch09:62.45–63.00 Mb`); the first marker coincides with the paper's independent chromosome-painting boundary.
+- **Candidate genes** recovered from ITAG4.1 in the interval: potassium transporters, F-box proteins, a cation-efflux protein, a metal-tolerance protein, and an Fe(II)-dependent oxygenase.
+
+**Experimental validation** (from the source paper, Anderson *et al.* 2024 — not recomputed here):
+
+- Haplotype-predicted resistance was **confirmed *in planta***: predicted-resistant accessions had far lower *A. linariae* stem disease than predicted-susceptible (mean 3.2 vs 28.2; Welch *t*(31.3) = −5.8, *P* < 0.001).
+- Fine-mapping narrowed EB-9 by **~70%**, and a second locus EB-5 (traced to *Hawaii 7998*) by **~56%**.
+
 ## Status & roadmap
 
 This repository is under active development. **Phases 0–2 are complete**: a typed, tested `haploqtl` package with a real CLI, plus an Agent Skill that interprets a fine-mapped interval into candidate genes and MAS markers — all reproducible from a clean `git clone`.
