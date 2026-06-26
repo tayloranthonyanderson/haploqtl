@@ -4,7 +4,7 @@
 **verbatim and unmodified** for provenance and reproducibility:
 
 - Source: [masudermann/HaplotypeAnalysis_Visualization](https://github.com/masudermann/HaplotypeAnalysis_Visualization)
-- Authored by **Taylor A. Anderson** (see the header in the file).
+- Authored by **Taylor A. Anderson**.
 - Published in Anderson *et al.* (2024), *The Plant Journal* 117(2):404–415, [doi:10.1111/tpj.16495](https://doi.org/10.1111/tpj.16495).
 
 It is intentionally left as-is. The clean, typed, tested reimplementation is being built
