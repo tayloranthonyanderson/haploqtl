@@ -8,7 +8,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/)
 
-**Reproducible, AI-augmented local-ancestry inference for fine-mapping QTL and predicting trait donors from large genomic sequence libraries.**
+**Local-ancestry inference that turns large whole-genome sequence libraries into fine-mapped QTL and predicted trait donors — reproducible, typed, and tested.**
 
 `haploqtl` turns a library of whole-genome sequences into actionable breeding intelligence. It detects cryptic ancestral introgressions, narrows the genomic intervals of quantitative trait loci (QTL), traces those loci to their historical donor cultivars, and predicts the trait in untested gene-bank accessions — without the need for purpose-built mapping populations.
 
