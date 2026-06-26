@@ -11,14 +11,28 @@ https://doi.org/10.1111/tpj.16495
 
 from __future__ import annotations
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
 
+from .accessions import load_name_map, resolve_samples
 from .cluster import WindowClustering, cluster_haplotypes, select_distance_threshold
+from .contrast import compare_to_benchmark, contrast_oneway, contrast_twoway
+from .introgression import (
+    BlockExtent,
+    DonorBlockSummary,
+    IntervalReduction,
+    IntrogressionCall,
+    call_interval,
+    donor_block_summary,
+    interval_reduction,
+    refine_with_markers,
+)
 from .io import GenotypeData, load_genotypes
+from .markers import DiagnosticMarker, find_diagnostic_markers
 from .windows import Window, iter_windows
 
 __all__ = [
     "__version__",
+    # io / windows / clustering
     "GenotypeData",
     "load_genotypes",
     "Window",
@@ -26,4 +40,23 @@ __all__ = [
     "WindowClustering",
     "cluster_haplotypes",
     "select_distance_threshold",
+    # accessions
+    "load_name_map",
+    "resolve_samples",
+    # contrast
+    "compare_to_benchmark",
+    "contrast_oneway",
+    "contrast_twoway",
+    # markers
+    "DiagnosticMarker",
+    "find_diagnostic_markers",
+    # introgression
+    "IntrogressionCall",
+    "IntervalReduction",
+    "BlockExtent",
+    "DonorBlockSummary",
+    "call_interval",
+    "interval_reduction",
+    "donor_block_summary",
+    "refine_with_markers",
 ]

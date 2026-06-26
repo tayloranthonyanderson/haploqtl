@@ -43,10 +43,11 @@ flowchart LR
 
 ## Results
 
-**Reproduced by this repository** on the bundled 780-genome panel (chromosome 9):
+**Reproduced by this repository** on the bundled 780-genome panel (chromosome 9), now **end-to-end from `haploqtl`** — clustering, introgression calling, and interval-narrowing all in code:
 
-- **EB-9 traced to a 1920s heirloom.** The stem/collar-rot locus traces to *Devon Surprise*; its introgression is shared across the resistant breeding pedigree and absent from the susceptible controls. The block decays from the full donor haplotype (3.9 Mb) to ~0.5 Mb over the EB-9 core in modern lines — the recombination decay that makes the fine-mapping possible (see banner).
-- **185 candidate MAS markers** — SNPs present in every resistant donor and absent from every susceptible control across the EB-9 interval (`SL4.0ch09:62.45–63.00 Mb`); the first marker coincides with the paper's independent chromosome-painting boundary.
+- **EB-9 fine-mapped to a 70% reduction, from code.** The two-way diagnostic contrast narrows EB-9 to `SL4.0ch09:62.40–62.95 Mb` (550 kb) — a **70.4% reduction** of the prior ~1.86 Mb interval, matching the paper's ~70%. The call is validated two ways: window-for-window against the original R contrast functions, and the underlying clustering against the legacy script (identical partitions wherever the merge-distance agrees).
+- **Introgression decay traces EB-9 to a 1920s heirloom.** The locus traces to *Devon Surprise*; its haplotype block is shared across the resistant pedigree and absent from susceptibles. The donor block **decays** from ~4.15 Mb down to ~0.75 Mb in the modern *NC 1 CELBR* recombinants — the recombination that erodes the introgression over breeding history is exactly what fine-maps the locus: those shorter blocks **define the narrowed boundaries**, and the **intersection** of all the blocks is the fine-mapped core. (Per-line extents are measured directly; we don't fit a per-generation decay rate, as the pedigree depth isn't reliably known.)
+- **Diagnostic MAS markers** populate the interval — SNPs present in every resistant line and absent from every susceptible control: **133** across the full nine-line two-way set, **185** across the smaller six-line set used by the candidate-gene skill; the SNP-level span refines the boundary to `62.60–62.94 Mb`.
 - **Candidate genes** recovered from ITAG4.1 in the interval: potassium transporters, F-box proteins, a cation-efflux protein, a metal-tolerance protein, and an Fe(II)-dependent oxygenase.
 
 **Experimental validation** (from the source paper, Anderson *et al.* 2024 — not recomputed here):
@@ -60,6 +61,7 @@ This repository is under active development. **Phases 0–2 are complete**: a ty
 
 - [x] **Phase 0 — Foundations & provenance.** Packaged project, pinned environment, CI, bundled chr09 fixture, reproducible demo, vendored reference implementation.
 - [x] **Phase 1 — Modernized core.** Reference script refactored into a typed, tested, documented `haploqtl` package with a real CLI. Two latent bugs in the reference fixed: the silhouette search no longer aborts to a fixed fallback threshold on a single degenerate distance, and the final genomic window is no longer dropped.
+- [x] **Phase 1.5 — Downstream introgression layer (R → Python).** The published downstream analysis lived entirely in R (`visualize_haplotypes.Rmd`). Ported into the typed, tested package: `contrast` (the one/two-way diagnostic contrast), `introgression` (algorithmic interval-narrowing — the original did it by eye — plus per-line donor-block retention and the fine-mapped core), and `markers` (diagnostic SNPs). Exposed as `haploqtl introgression`. Validated by **window-for-window equivalence to the original R** and a new **clustering ↔ legacy equivalence test** (identical partitions where the merge-distance agrees).
 - [x] **Phase 2 — Agent Skill.** [`qtl-candidate-gene`](skills/qtl-candidate-gene/) — interval → candidate genes (ITAG4.1) → protein function (live UniProt) → diagnostic MAS markers → breeder report. Authored in Anthropic's Agent Skill (`SKILL.md`) format.
 - [ ] **Phase 3 — Database connector.** Wire the candidate-gene workflow to standard genomics databases (NCBI / UniProt / Sol Genomics Network) as a reusable MCP connector.
 - [ ] **Phase 4 — Evaluation benchmark.** A meaningful, verifiable measure of model judgment on the candidate-gene workflow (in design).
@@ -88,6 +90,17 @@ uv run haploqtl cluster data/SL4.0ch09_subset.vcf.gz \
 
 The merge-distance threshold is auto-tuned per window (`--d-min/--d-max/--d-step` set the search grid). Output is a tidy long table — one row per (window, sample) with columns `chromosome, position, sample, cluster, distance_threshold, PC1..PCk`. See `uv run haploqtl cluster --help` for all options.
 
+Then call the introgression interval, % reduction, and per-line donor-block retention straight from the VCF:
+
+```bash
+uv run haploqtl introgression data/SL4.0ch09_subset.vcf.gz --chrom ch09 \
+    --resistant "Devon Surprise,Cambell 1943,NC EBR 2,NC 1 CELBR A,NC 1 CELBR B,CU151095-146,CU151011-146,CU191357,CU201041" \
+    --susceptible "NC EBR 1,Brandywine,NC 84173" \
+    --prior 61819509-63679761
+```
+
+This clusters, runs the two-way diagnostic contrast, narrows EB-9 to the longest gap-tolerant diagnostic run (550 kb, **70.4% reduction**), summarizes per-line donor-block retention and the fine-mapped core, and refines the boundary to SNP resolution. Accession names are resolved to VCF IDs automatically. See `uv run haploqtl introgression --help`.
+
 ## Agent Skill: `qtl-candidate-gene`
 
 An [Agent Skill](skills/qtl-candidate-gene/) (in Anthropic's `SKILL.md` format) that interprets a fine-mapped interval the way a geneticist would — turning coordinates into biology:
@@ -103,13 +116,15 @@ On the EB-9 interval it recovers exactly the gene families the paper highlighted
 
 ```
 haploqtl/
-├── src/haploqtl/      # io.py (VCF→dosage), windows.py (sliding windows),
-│                      # cluster.py (silhouette-tuned Ward clustering), cli.py
+├── src/haploqtl/      # io (VCF→dosage), windows, cluster (silhouette-tuned Ward),
+│                      # contrast + introgression + markers (interval-narrowing &
+│                      # donor-block retention), accessions, cli
 ├── skills/            # qtl-candidate-gene Agent Skill (SKILL.md + scripts + references)
 ├── legacy/            # vendored, attributed reference script from the published paper
 ├── data/              # bundled chr09 fixture (780 genomes) + accession name map
 ├── scripts/           # run_demo.sh — reproduce a minimal EB-9 result
-├── tests/             # unit, CLI, skill, and legacy-baseline tests
+├── tests/             # unit, CLI, skill, legacy-baseline, R-equivalence (tests/r +
+│                      # tests/fixtures golden) and clustering↔legacy tests
 └── .github/workflows/ # CI: lint + format + type-check + test on Python 3.11 & 3.12
 ```
 
