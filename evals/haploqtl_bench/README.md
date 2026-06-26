@@ -32,9 +32,11 @@ Regenerate the dataset (deterministic) with `uv run python evals/haploqtl_bench/
 
 ## Why these tasks
 
-Both tasks isolate reasoning a breeder actually needs from a model working over genomic data — marker diagnosticity and fine-mapping interval logic — while staying fully verifiable, so a score is exact rather than a judgement call.
-The harness is provider-agnostic (the model call is injected), so adding other providers or
-tasks is a small change.
+Both tasks isolate reasoning a breeder actually needs from a model working over genomic
+data — marker diagnosticity and fine-mapping interval logic — while staying fully
+verifiable, so a score is exact rather than a judgement call. The harness is
+provider-agnostic (the model call is injected), so adding other providers or tasks is a
+small change.
 
 ## Results
 
