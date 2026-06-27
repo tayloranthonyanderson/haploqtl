@@ -21,6 +21,7 @@ from .introgression import (
     refine_with_markers,
 )
 from .io import load_genotypes
+from .painting import build_painting, render_ascii, render_svg
 
 
 @click.group()
@@ -243,3 +244,119 @@ def introgression(
             output_dir / "block_extents.csv", index=False
         )
         click.echo(f"\nWrote diagnostic_track.csv + block_extents.csv to {output_dir}/")
+
+
+@main.command()
+@click.argument("vcf", type=click.Path(exists=True, dir_okay=False, path_type=Path))
+@click.option("--chrom", required=True, help="Chromosome label (e.g. ch09).")
+@click.option("--benchmark", required=True, help="Donor accession to paint against (name or ID).")
+@click.option(
+    "--clusters",
+    "clusters_csv",
+    type=click.Path(exists=True, dir_okay=False, path_type=Path),
+    default=None,
+    help="Precomputed cluster CSV; skips clustering the VCF.",
+)
+@click.option("--window", default=250_000, show_default=True, help="Sliding window size (bp).")
+@click.option("--step", default=100_000, show_default=True, help="Window step size (bp).")
+@click.option("--min-snps", default=10, show_default=True, help="Minimum SNPs per window.")
+@click.option("--d-min", default=2.0, show_default=True, help="Minimum merge-distance threshold.")
+@click.option(
+    "--d-max", default=80.0, show_default=True, help="Maximum merge-distance (exclusive)."
+)
+@click.option("--d-step", default=10.0, show_default=True, help="Merge-distance grid step.")
+@click.option("--resistant", default=None, help="Comma-separated lines to tag 'R'.")
+@click.option("--susceptible", default=None, help="Comma-separated lines to tag 'S'.")
+@click.option(
+    "--highlight", default=None, help="Highlight interval 'start-end' (e.g. an EB-9 core)."
+)
+@click.option(
+    "--svg",
+    type=click.Path(path_type=Path),
+    default=None,
+    help="Also write a self-contained, to-scale SVG painting here.",
+)
+@click.option("--all-samples", is_flag=True, help="Paint all samples, not just named accessions.")
+def paint(
+    vcf: Path,
+    chrom: str,
+    benchmark: str,
+    clusters_csv: Path | None,
+    window: int,
+    step: int,
+    min_snps: int,
+    d_min: float,
+    d_max: float,
+    d_step: float,
+    resistant: str | None,
+    susceptible: str | None,
+    highlight: str | None,
+    svg: Path | None,
+    all_samples: bool,
+) -> None:
+    """Paint each accession where it shares the donor (benchmark) haplotype along the chromosome.
+
+    The modern equivalent of the original Rmd's ``compare_clusters`` + ggplot facets: rows are
+    accessions (ordered by how much of the donor haplotype they retain), painted where they
+    share the benchmark's local haplotype cluster. Prints a terminal painting; ``--svg`` also
+    writes a to-scale figure.
+    """
+    if clusters_csv is not None:
+        clusters = pd.read_csv(clusters_csv, dtype={"sample": str})
+    else:
+        d_grid = np.arange(d_min, d_max, d_step, dtype=np.float64)
+        if d_grid.size == 0:
+            raise click.BadParameter("empty distance grid; check --d-min / --d-max / --d-step")
+        data = load_genotypes(vcf)
+        clusters = cluster_haplotypes(
+            data, chrom, window=window, step=step, min_snps=min_snps, d_grid=d_grid
+        )
+
+    available = set(clusters["sample"].astype(str))
+    name_map = load_name_map()
+    # Cluster-ID -> accession name. Rename-map IDs are X-prefixed (X191163); the VCF/cluster
+    # IDs drop the X (191163), so index both forms.
+    labels: dict[str, str] = {}
+    for nm, sid in name_map.items():
+        labels[sid] = nm
+        if sid.startswith("X"):
+            labels[sid[1:]] = nm
+
+    bench_ids, _ = resolve_samples([benchmark], available, name_map)
+    if not bench_ids:
+        raise click.ClickException(f"benchmark {benchmark!r} not found in the data")
+    bench_id = bench_ids[0]
+
+    tags: dict[str, str] = {}
+    if resistant:
+        rids, _ = resolve_samples(
+            [s.strip() for s in resistant.split(",") if s.strip()], available, name_map
+        )
+        tags.update(dict.fromkeys(rids, "R"))
+    if susceptible:
+        sids, _ = resolve_samples(
+            [s.strip() for s in susceptible.split(",") if s.strip()], available, name_map
+        )
+        tags.update(dict.fromkeys(sids, "S"))
+
+    samples: list[str] | None
+    if all_samples:
+        samples = None
+    else:
+        samples = sorted(s for s in available if s in labels) or None
+        if samples is not None and bench_id not in samples:
+            samples = [bench_id, *samples]
+
+    highlight_interval: tuple[int, int] | None = None
+    if highlight:
+        parts = highlight.split("-")
+        if len(parts) != 2:
+            raise click.BadParameter("--highlight must be 'start-end'")
+        highlight_interval = (int(parts[0]), int(parts[1]))
+
+    painting = build_painting(clusters, bench_id, samples=samples)
+    click.echo(render_ascii(painting, labels=labels, tags=tags, eb9=highlight_interval))
+    if svg is not None:
+        svg.parent.mkdir(parents=True, exist_ok=True)
+        svg.write_text(render_svg(painting, labels=labels, tags=tags, eb9=highlight_interval))
+        click.echo(f"\nWrote SVG painting to {svg}", err=True)

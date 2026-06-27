@@ -28,6 +28,7 @@ from .introgression import (
 )
 from .io import GenotypeData, load_genotypes
 from .markers import DiagnosticMarker, find_diagnostic_markers
+from .painting import Painting, build_painting, render_ascii, render_svg
 from .windows import Window, iter_windows
 
 __all__ = [
@@ -59,4 +60,9 @@ __all__ = [
     "interval_reduction",
     "donor_block_summary",
     "refine_with_markers",
+    # painting
+    "Painting",
+    "build_painting",
+    "render_ascii",
+    "render_svg",
 ]
