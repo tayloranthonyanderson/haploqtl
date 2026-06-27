@@ -1,0 +1,41 @@
+accession,vcf_id,mean_stem_lesion_pct,class
+PE-63,SRR1572418,0.0,resistant
+BGV007901,SRR7279680,0.0,resistant
+Wheatleys Frost Resistant,ERR418071,0.1,resistant
+Trujillo,SRR1572247,0.1,resistant
+Monplaisir,SRR1572383,0.1,resistant
+LA1712,SRR7279517,0.1,resistant
+BGV007871,SRR7279711,0.1,resistant
+Katinka Cherry,ERR418045,0.1,resistant
+Gardeners delight,SRR5079888,0.1,resistant
+Yellow Perfection,SRR5079859,0.2,resistant
+BGV007909,SRR7279606,0.2,resistant
+BGV007918,SRR7279522,0.2,resistant
+DevonSurprise,191163,0.3,resistant
+BGV007990,SRR7279617,0.3,resistant
+Cuba Plum,SRR1572373,0.3,resistant
+BGV007989,SRR7279582,0.3,resistant
+BGV007857,SRR7279635,0.4,resistant
+191357,191357,0.5,resistant
+201041,201041,0.5,resistant
+LA1320,SRR1572328,0.5,resistant
+BGV008051,SRR7279528,0.6,resistant
+BGV012640,SRR7279605,0.7,resistant
+Lemon Drop,SRR5079871,0.7,resistant
+Green Gage,SRR1572300,0.9,resistant
+BGV007860,SRR7279684,1.1,resistant
+BGV007872,SRR7279581,1.5,resistant
+BGV007911,SRR7279714,1.7,resistant
+Merida,SRR1572626,2.0,resistant
+Gold Currant,SRR5080031,2.1,resistant
+PI370093 A,SRR1572285,2.1,resistant
+BGV007921,SRR7279579,3.0,resistant
+BGV008354,SRR7279576,3.0,resistant
+Snowberry,SRR5080135,3.3,resistant
+Yellow Pear,SRR5080053,8.7,susceptible
+Azoychka Russian,SRR5079892,21.3,susceptible
+Ailsa Craig,SRR1572460,32.7,susceptible
+Green Zebra,SRR5080064,41.3,susceptible
+NC84173,SRR1572598,42.0,susceptible
+Cherokee purple,SRR5080091,42.3,susceptible
+OH7663,OH7663,64.7,susceptible

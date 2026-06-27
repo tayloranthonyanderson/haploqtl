@@ -55,6 +55,20 @@ flowchart LR
 - Haplotype-predicted resistance was **confirmed *in planta***: predicted-resistant accessions had far lower *A. linariae* stem disease than predicted-susceptible (mean 3.2 vs 28.2; Welch *t*(31.3) = −5.8, *P* < 0.001).
 - Fine-mapping narrowed EB-9 by **~70%**, and a second locus EB-5 (traced to *Hawaii 7998*) by **~56%**.
 
+## Sharpening EB-9 with a phenotyped recombinant
+
+<p align="center">
+  <img src="assets/eb9_finemapping_summary.svg" alt="EB-9 fine-mapping: narrowing the interval from 70.4% to 81.2% reduction using a phenotyped recombinant" width="100%">
+</p>
+
+The interval-narrowing isn't only a reproduction — it can go **further than the published interval**, entirely from the bundled data. [`examples/finemap_eb9.py`](examples/finemap_eb9.py) walks through it:
+
+- **Reproduce the paper.** Resistant pedigree vs. the susceptible controls gives `SL4.0ch09:62.40–62.95 Mb` — a **70.4% reduction** of the prior interval.
+- **Then narrow it.** *Ailsa Craig* is a **phenotyped-susceptible** heirloom (32.7% mean stem lesion *in planta*; [`data/eb9_phenotypes.csv`](data/eb9_phenotypes.csv)) that nonetheless carries the *Devon Surprise* haplotype across the **left** flank. A susceptible carrying it proves that flank can't be sufficient — so adding it as a susceptible trims the left edge to 62.60 Mb: **81.2% reduction** (350 kb).
+- **And know when to stop.** Nine *resistant* lines look like they'd trim the right edge, but `BGV007871` carries Ailsa Craig's exact haplotype while being resistant (0.1% stem lesion) — its resistance comes from another source. Resistant recombinants are confounded, so the right edge holds. The susceptible-recombinant argument is robust; the resistant one isn't.
+
+Phenotypes are from Anderson *et al.* (2024); the sequence data is the bundled fixture. Run it with `uv run python examples/finemap_eb9.py`.
+
 ## Status & roadmap
 
 This repository is under active development. **Phases 0–2 are complete**: a typed, tested `haploqtl` package with a real CLI, plus an Agent Skill that interprets a fine-mapped interval into candidate genes and MAS markers — all reproducible from a clean `git clone`.
@@ -101,6 +115,17 @@ uv run haploqtl introgression data/SL4.0ch09_subset.vcf.gz --chrom ch09 \
 
 This clusters, runs the two-way diagnostic contrast, narrows EB-9 to the longest gap-tolerant diagnostic run (550 kb, **70.4% reduction**), summarizes per-line donor-block retention and the fine-mapped core, and refines the boundary to SNP resolution. Accession names are resolved to VCF IDs automatically. See `uv run haploqtl introgression --help`.
 
+Or **paint** each accession where it shares a donor's haplotype along the chromosome — the modern equivalent of the original R chromosome-painting figure (prints a terminal painting; `--svg` writes a to-scale figure):
+
+```bash
+uv run haploqtl paint data/SL4.0ch09_subset.vcf.gz --chrom ch09 \
+    --benchmark "Devon Surprise" --highlight 62400075-62950075 --svg eb9_painting.svg
+```
+
+<p align="center">
+  <img src="assets/eb9_painting.svg" alt="Chromosome painting of the EB-9 region versus Devon Surprise, ordered by donor-haplotype extent" width="100%">
+</p>
+
 ## Agent Skill: `qtl-candidate-gene`
 
 An [Agent Skill](skills/qtl-candidate-gene/) (in Anthropic's `SKILL.md` format) that interprets a fine-mapped interval the way a geneticist would — turning coordinates into biology:
@@ -118,10 +143,11 @@ On the EB-9 interval it recovers exactly the gene families the paper highlighted
 haploqtl/
 ├── src/haploqtl/      # io (VCF→dosage), windows, cluster (silhouette-tuned Ward),
 │                      # contrast + introgression + markers (interval-narrowing &
-│                      # donor-block retention), accessions, cli
+│                      # donor-block retention), painting, accessions, cli
 ├── skills/            # qtl-candidate-gene Agent Skill (SKILL.md + scripts + references)
 ├── legacy/            # vendored, attributed reference script from the published paper
-├── data/              # bundled chr09 fixture (780 genomes) + accession name map
+├── data/              # bundled chr09 fixture (780 genomes) + names + published phenotypes
+├── examples/          # finemap_eb9.py — sharpen EB-9 with a phenotyped recombinant
 ├── scripts/           # run_demo.sh — reproduce a minimal EB-9 result
 ├── tests/             # unit, CLI, skill, legacy-baseline, R-equivalence (tests/r +
 │                      # tests/fixtures golden) and clustering↔legacy tests

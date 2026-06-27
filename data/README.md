@@ -16,5 +16,11 @@ reproduce a fine-mapped EB-9 result and to keep the demo and CI fast.
 ### `AccessionRename.txt`
 Maps the numeric sample IDs in the VCF header to human-readable accession names.
 
+### `eb9_phenotypes.csv`
+Mean early-blight stem-lesion score (% diseased stem area, *in planta*) and a derived
+resistant/susceptible class (threshold 5%) for panel accessions, from the *A. linariae* screen
+in Anderson *et al.* (2024). Used by [`examples/finemap_eb9.py`](../examples/finemap_eb9.py) to
+validate the phenotyped recombinant that sharpens the EB-9 interval.
+
 See the source paper for full methods: Anderson *et al.* (2024), *The Plant Journal*
 117(2):404–415, [doi:10.1111/tpj.16495](https://doi.org/10.1111/tpj.16495).
