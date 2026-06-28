@@ -56,7 +56,9 @@ class IntrogressionCall:
 class IntervalReduction:
     called: tuple[float, float]
     prior: tuple[float, float]
+    refined: tuple[float, float]  # called ∩ prior — the part that actually narrows the QTL
     called_span: float
+    refined_span: float
     prior_span: float
     reduction: float  # fraction in [0, 1]
 
@@ -141,14 +143,28 @@ def call_interval(
 def interval_reduction(
     called: tuple[float, float], prior: tuple[float, float]
 ) -> IntervalReduction:
-    """Fractional reduction in interval span of ``called`` relative to ``prior``."""
-    called_span = float(called[1] - called[0])
-    prior_span = float(prior[1] - prior[0])
-    reduction = float(1.0 - called_span / prior_span) if prior_span else 0.0
+    """Fractional reduction of a prior QTL interval given a called introgression interval.
+
+    The reduction is measured on the **overlap** of ``called`` with ``prior``: a detected
+    introgression can extend past the statistical QTL support interval — EB-5 runs ~350 kb
+    beyond its lower bound — but only the portion inside the prior narrows the QTL. When
+    ``called`` is nested in ``prior`` (EB-9) the overlap equals ``called`` and this is a
+    plain span ratio. A ``called`` interval that does not overlap the prior does not narrow
+    it (``reduction == 0``).
+    """
+    called = (float(called[0]), float(called[1]))
+    prior = (float(prior[0]), float(prior[1]))
+    lo, hi = max(called[0], prior[0]), min(called[1], prior[1])
+    refined = (lo, hi) if hi > lo else (lo, lo)
+    refined_span = max(0.0, hi - lo)
+    prior_span = prior[1] - prior[0]
+    reduction = float(1.0 - refined_span / prior_span) if (prior_span and refined_span) else 0.0
     return IntervalReduction(
-        called=(float(called[0]), float(called[1])),
-        prior=(float(prior[0]), float(prior[1])),
-        called_span=called_span,
+        called=called,
+        prior=prior,
+        refined=refined,
+        called_span=called[1] - called[0],
+        refined_span=refined_span,
         prior_span=prior_span,
         reduction=reduction,
     )

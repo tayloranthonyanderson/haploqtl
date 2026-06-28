@@ -13,6 +13,13 @@ reproduce a fine-mapped EB-9 result and to keep the demo and CI fast.
 - Redistributed from the public analysis repository
   [masudermann/HaplotypeAnalysis_Visualization](https://github.com/masudermann/HaplotypeAnalysis_Visualization).
 
+### `SL4.0ch05_subset.vcf.gz`
+The same 780-genome panel restricted to a ~4 Mb region of chromosome 5 (≈ chr05:61.0–65.0 Mb)
+spanning the **EB-5** foliar early-blight resistance QTL, 18,558 biallelic variants. Used by
+[`examples/finemap_eb5.py`](../examples/finemap_eb5.py) to reproduce the published EB-5 narrowing
+from a different donor (*Hawaii 7998*) and susceptible set — the generalization check. Same
+reference, sources, and provenance as the chr09 fixture above.
+
 ### `AccessionRename.txt`
 Maps the numeric sample IDs in the VCF header to human-readable accession names.
 

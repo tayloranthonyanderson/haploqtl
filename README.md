@@ -43,7 +43,7 @@ flowchart LR
 
 ## Results
 
-**Reproduced by this repository** on the bundled 780-genome panel (chromosome 9), now **end-to-end from `haploqtl`** — clustering, introgression calling, and interval-narrowing all in code:
+**Reproduced by this repository** on the bundled 780-genome panels (chromosomes 9 and 5), now **end-to-end from `haploqtl`** — clustering, introgression calling, and interval-narrowing all in code:
 
 - **EB-9 fine-mapped to a 70% reduction, from code.** The two-way diagnostic contrast narrows EB-9 to `SL4.0ch09:62.40–62.95 Mb` (550 kb) — a **70.4% reduction** of the prior ~1.86 Mb interval, matching the paper's ~70%. The call is validated two ways: window-for-window against the original R contrast functions, and the underlying clustering against the legacy script (identical partitions wherever the merge-distance agrees).
 - **Introgression decay traces EB-9 to a 1920s heirloom.** The locus traces to *Devon Surprise*; its haplotype block is shared across the resistant pedigree and absent from susceptibles. The donor block **decays** from ~4.15 Mb down to ~0.75 Mb in the modern *NC 1 CELBR* recombinants — the recombination that erodes the introgression over breeding history is exactly what fine-maps the locus: those shorter blocks **define the narrowed boundaries**, and the **intersection** of all the blocks is the fine-mapped core. (Per-line extents are measured directly; we don't fit a per-generation decay rate, as the pedigree depth isn't reliably known.)
@@ -53,7 +53,6 @@ flowchart LR
 **Experimental validation** (from the source paper, Anderson *et al.* 2024 — not recomputed here):
 
 - Haplotype-predicted resistance was **confirmed *in planta***: predicted-resistant accessions had far lower *A. linariae* stem disease than predicted-susceptible (mean 3.2 vs 28.2; Welch *t*(31.3) = −5.8, *P* < 0.001).
-- Fine-mapping narrowed EB-9 by **~70%**, and a second locus EB-5 (traced to *Hawaii 7998*) by **~56%**.
 
 ## Sharpening EB-9 with a phenotyped recombinant
 
@@ -68,6 +67,17 @@ The interval-narrowing isn't only a reproduction — it can go **further than th
 - **And know when to stop.** Nine *resistant* lines look like they'd trim the right edge, but `BGV007871` carries Ailsa Craig's exact haplotype while being resistant (0.1% stem lesion) — its resistance comes from another source. Resistant recombinants are confounded, so the right edge holds. The susceptible-recombinant argument is robust; the resistant one isn't.
 
 Phenotypes are from Anderson *et al.* (2024); the sequence data is the bundled fixture. Run it with `uv run python examples/finemap_eb9.py`.
+
+## Generalizing to a second locus: EB-5
+
+The engine isn't specialized to EB-9. [`examples/finemap_eb5.py`](examples/finemap_eb5.py) points the *same* clustering and two-way contrast at **chromosome 5**, with a **different donor, trait, and panel** — *Hawaii 7998*'s **foliar** (not collar-rot) resistance pathway (`HA7998 → OH7536 → OH08-7663`) against a disjoint susceptible set (`OH88119`, `NC 84173`, `Brandywine`) — and recovers the published EB-5 introgression: a **56.2% reduction** of the prior QTL (refined span 500 kb, matching Anderson *et al.* 2024 Table S2 to within ~0.1 kb), on a bundled 780-genome chr05 fixture.
+
+Two details make it a genuine test rather than a copy of EB-9:
+
+- **The introgression is larger than the statistical QTL interval.** In the paper the EB-5 haplotype runs ~350 kb past the prior QTL's lower bound, so the *refined QTL* is the haplotype **intersected with the prior** — `interval_reduction` measures the reduction on that overlap (a 500 kb refined span from an 850 kb haplotype). EB-9, by contrast, sat nested inside its prior.
+- **Resistance is tissue-specific.** `OH08-7663` carries Hawaii 7998's foliar (EB-5) resistance yet is collar-rot (EB-9) **susceptible** (64.7% stem lesion). The EB-5 mapping cross (`CU151095-146 × OH08-7663`) deliberately paired the two complementary resistances, which is why the EB-5 and EB-9 donor sets barely overlap.
+
+Run it with `uv run python examples/finemap_eb5.py` (~70 s).
 
 ## Status & roadmap
 
@@ -146,8 +156,8 @@ haploqtl/
 │                      # donor-block retention), painting, accessions, cli
 ├── skills/            # qtl-candidate-gene Agent Skill (SKILL.md + scripts + references)
 ├── legacy/            # vendored, attributed reference script from the published paper
-├── data/              # bundled chr09 fixture (780 genomes) + names + published phenotypes
-├── examples/          # finemap_eb9.py — sharpen EB-9 with a phenotyped recombinant
+├── data/              # bundled chr09 + chr05 fixtures (780 genomes) + names + phenotypes
+├── examples/          # finemap_eb9.py (sharpen EB-9) + finemap_eb5.py (generalize to EB-5)
 ├── scripts/           # run_demo.sh — reproduce a minimal EB-9 result
 ├── tests/             # unit, CLI, skill, legacy-baseline, R-equivalence (tests/r +
 │                      # tests/fixtures golden) and clustering↔legacy tests
