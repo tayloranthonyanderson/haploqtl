@@ -96,9 +96,7 @@ On the bundled 780-genome chr09 panel, `haploqtl` reproduces the paper's EB-9 re
 
 In the source paper (Anderson *et al.* 2024, not recomputed here), haplotype-predicted resistance was **confirmed *in planta*** (predicted-resistant vs -susceptible stem disease, mean 3.2 vs 28.2; Welch *t*(31.3) = −5.8, *P* < 0.001).
 
-## Worked examples
-
-Two runnable examples go further than the headline reproduction, entirely from the bundled data. Each script's docstring walks through the reasoning:
+Two runnable examples go further, entirely from the bundled data (each script's docstring walks through the reasoning):
 
 - [`examples/finemap_eb9.py`](examples/finemap_eb9.py) — sharpens EB-9 from a 70% to an **81% reduction** by adding a phenotyped-susceptible recombinant (*Ailsa Craig*), and shows why the resistant recombinants can't tighten the other edge.
 - [`examples/finemap_eb5.py`](examples/finemap_eb5.py) — points the same clustering and two-way contrast at a **second locus** (a different donor, trait, and chromosome) and recovers the published EB-5 introgression (~56% reduction).
