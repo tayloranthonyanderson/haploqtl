@@ -87,8 +87,7 @@ This repository is under active development. **Phases 0–2 are complete**: a ty
 - [x] **Phase 1 — Modernized core.** Reference script refactored into a typed, tested, documented `haploqtl` package with a real CLI. Two latent bugs in the reference fixed: the silhouette search no longer aborts to a fixed fallback threshold on a single degenerate distance, and the final genomic window is no longer dropped.
 - [x] **Phase 1.5 — Downstream introgression layer (R → Python).** The published downstream analysis lived entirely in R (`visualize_haplotypes.Rmd`). Ported into the typed, tested package: `contrast` (the one/two-way diagnostic contrast), `introgression` (algorithmic interval-narrowing — the original did it by eye — plus per-line donor-block retention and the fine-mapped core), and `markers` (diagnostic SNPs). Exposed as `haploqtl introgression`. Validated by **window-for-window equivalence to the original R** and a new **clustering ↔ legacy equivalence test** (identical partitions where the merge-distance agrees).
 - [x] **Phase 2 — Agent Skill.** [`qtl-candidate-gene`](skills/qtl-candidate-gene/) — interval → candidate genes (ITAG4.1) → protein function (live UniProt) → diagnostic MAS markers → breeder report. Authored in Anthropic's Agent Skill (`SKILL.md`) format.
-- [ ] **Phase 3 — Database connector.** Wire the candidate-gene workflow to standard genomics databases (NCBI / UniProt / Sol Genomics Network) as a reusable MCP connector.
-- [ ] **Phase 4 — Evaluation benchmark.** A meaningful, verifiable measure of model judgment on the candidate-gene workflow (in design).
+- [ ] **Next — Evaluation benchmark.** A small, verifiable benchmark scoring model *judgment* on the candidate-gene workflow — hallucinated genes/functions, mis-ranked candidates, misread genotypes, ungrounded citations (in design).
 
 ## Quickstart
 

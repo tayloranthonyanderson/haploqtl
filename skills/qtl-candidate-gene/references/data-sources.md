@@ -22,4 +22,4 @@ For intervals outside the bundled regions, pass a full ITAG4.1 GFF3 to `genes_in
 - Use the PubMed connector from the Claude for Life Sciences marketplace (not bundled here) for literature grounding in Step 3.
 
 ## Why not Ensembl Plants REST?
-A live Ensembl Plants region query would be a natural fit, but as of this writing the EnsemblGenomes REST host (`rest.ensemblgenomes.org`) is not resolving, and the main `rest.ensembl.org` does not serve plant species (`solanum_lycopersicum` is unknown there). The authoritative, version-exact path is therefore the bundled SGN ITAG4.1 slice; UniProt provides the live-database integration. A dedicated MCP connector to a genomics database is the subject of a later phase.
+A live Ensembl Plants region query would be a natural fit, but as of this writing the EnsemblGenomes REST host (`rest.ensemblgenomes.org`) is not resolving, and the main `rest.ensembl.org` does not serve plant species (`solanum_lycopersicum` is unknown there). The authoritative, version-exact path is therefore the bundled SGN ITAG4.1 slice; UniProt provides the live-database integration.
