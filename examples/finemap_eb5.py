@@ -75,20 +75,30 @@ def main() -> None:
     red = interval_reduction((call.start, call.stop), PRIOR)
 
     print("EB-5 foliar resistance (Hawaii 7998 pathway vs. susceptible controls):")
-    print(f"  introgression haplotype : {call.start:>12,.0f} - {call.stop:<12,.0f} "
-          f"({call.span:,.0f} bp, {call.n_windows} windows)")
-    print(f"  prior QTL interval      : {PRIOR[0]:>12,.0f} - {PRIOR[1]:<12,.0f} "
-          f"({red.prior_span:,.0f} bp)")
-    print(f"  refined QTL (∩ prior)   : {red.refined[0]:>12,.0f} - {red.refined[1]:<12,.0f} "
-          f"({red.refined_span:,.0f} bp, {red.reduction * 100:.1f}% reduction)")
+    print(
+        f"  introgression haplotype : {call.start:>12,.0f} - {call.stop:<12,.0f} "
+        f"({call.span:,.0f} bp, {call.n_windows} windows)"
+    )
+    print(
+        f"  prior QTL interval      : {PRIOR[0]:>12,.0f} - {PRIOR[1]:<12,.0f} "
+        f"({red.prior_span:,.0f} bp)"
+    )
+    print(
+        f"  refined QTL (∩ prior)   : {red.refined[0]:>12,.0f} - {red.refined[1]:<12,.0f} "
+        f"({red.refined_span:,.0f} bp, {red.reduction * 100:.1f}% reduction)"
+    )
     print("  paper (Anderson et al. 2024, Table S2): 500,126 bp refined, 56.2% reduction\n")
 
     # Tissue-specific resistance: the EB-5 donor OH08-7663 is collar-rot (EB-9) susceptible.
     pheno = pd.read_csv(PHENO).set_index("vcf_id")
     oh = pheno.loc["OH7663"]
-    print(f"OH08-7663 — EB-5 foliar-resistant (above), but EB-9 collar-rot SUSCEPTIBLE: "
-          f"{oh['mean_stem_lesion_pct']}% stem lesion ({oh['class']}).")
-    print("           Foliar (EB-5) and stem (EB-9) resistance are independent traits and donors.\n")
+    print(
+        f"OH08-7663 — EB-5 foliar-resistant (above), but EB-9 collar-rot SUSCEPTIBLE: "
+        f"{oh['mean_stem_lesion_pct']}% stem lesion ({oh['class']})."
+    )
+    print(
+        "           Foliar (EB-5) and stem (EB-9) resistance are independent traits and donors.\n"
+    )
 
     # Other public lines carrying the Hawaii 7998 haplotype across the core (predicted EB-5).
     core = compare_to_benchmark(clusters, DONOR).query(
@@ -96,8 +106,10 @@ def main() -> None:
     )
     carriers = core.groupby("sample").size()
     extra = sorted(s for s in carriers.index if s not in RESISTANT + SUSCEPTIBLE)
-    print(f"Other lines carrying the Hawaii 7998 haplotype across the core: {len(extra)} "
-          f"(e.g. {', '.join(extra[:4])}) — EB-5 remains rare in public germplasm.")
+    print(
+        f"Other lines carrying the Hawaii 7998 haplotype across the core: {len(extra)} "
+        f"(e.g. {', '.join(extra[:4])}) — EB-5 remains rare in public germplasm."
+    )
 
 
 if __name__ == "__main__":
