@@ -27,7 +27,7 @@ Use when the user:
 ```
 [ ] Step 1  Genes in the interval        (offline, ITAG4.1)
 [ ] Step 2  Protein function             (live UniProt)        -- needs network
-[ ] Step 3  Literature context           (PubMed connector)    -- optional
+[ ] Step 3  Literature context           (PubMed)              -- optional
 [ ] Step 4  Diagnostic MAS markers       (offline, from VCF)   -- if accessions given
 [ ] Step 5  Synthesize candidate report  (reasoning)
 ```
@@ -51,7 +51,7 @@ python scripts/gene_function.py Solyc09g074790 Solyc09g074510
 **DECISION POINT:** this requires network access. If offline, skip and rely on the ITAG4.1 descriptions from Step 1. Not every Solyc gene has a UniProt entry; `null` fields are expected and fine.
 
 ### Step 3 — Literature context (optional)
-If the PubMed connector is available, search for evidence linking the candidate gene families (Step 1–2) to disease resistance — e.g. *"tomato F-box protein defense Alternaria"*, *"potassium transporter stomatal immunity"*. Cite PMIDs in the report.
+If you have PubMed access, search for evidence linking the candidate gene families (Step 1–2) to disease resistance — e.g. *"tomato F-box protein defense Alternaria"*, *"potassium transporter stomatal immunity"*. Cite PMIDs in the report.
 
 ### Step 4 — Diagnostic MAS markers (if accessions provided)
 Find variants whose allele is present in all resistant donors and absent from all susceptible controls — diagnostic markers for marker-assisted selection:

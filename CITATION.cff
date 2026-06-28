@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 message: "If you use this software or method, please cite the paper below."
-title: "haploqtl: reproducible, AI-augmented local-ancestry inference for QTL discovery"
+title: "haploqtl: reproducible local-ancestry inference for QTL discovery in tomato"
 authors:
   - family-names: Anderson
     given-names: Taylor A.

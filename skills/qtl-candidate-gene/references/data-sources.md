@@ -19,7 +19,7 @@ For intervals outside the bundled regions, pass a full ITAG4.1 GFF3 to `genes_in
 - UniProt entries cross-reference the ITAG/EnsemblPlants `Solyc` transcript IDs, so a free-text search on the base Solyc ID (version stripped) resolves the entry. Not every ITAG gene is in UniProt; missing entries return `null` and the workflow falls back to the ITAG4.1 description.
 
 ## Literature — PubMed
-- Use the PubMed connector from the Claude for Life Sciences marketplace (not bundled here) for literature grounding in Step 3.
+- Look up supporting literature in PubMed for Step 3.
 
 ## Why not Ensembl Plants REST?
 A live Ensembl Plants region query would be a natural fit, but as of this writing the EnsemblGenomes REST host (`rest.ensemblgenomes.org`) is not resolving, and the main `rest.ensembl.org` does not serve plant species (`solanum_lycopersicum` is unknown there). The authoritative, version-exact path is therefore the bundled SGN ITAG4.1 slice; UniProt provides the live-database integration.
