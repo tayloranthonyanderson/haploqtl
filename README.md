@@ -70,7 +70,7 @@ Phenotypes are from Anderson *et al.* (2024); the sequence data is the bundled f
 
 ## Generalizing to a second locus: EB-5
 
-The engine isn't specialized to EB-9. [`examples/finemap_eb5.py`](examples/finemap_eb5.py) points the *same* clustering and two-way contrast at chromosome 5, with a different donor, trait, and panel — *Hawaii 7998*'s foliar (not collar-rot) resistance pathway (`HA7998 → OH7536 → OH08-7663`) against a disjoint susceptible set (`OH88119`, `NC 84173`, `Brandywine`) — and recovers the published EB-5 introgression: a 56.2% reduction of the prior QTL (refined span 500 kb, matching Anderson *et al.* 2024 Table S2 to within ~0.1 kb), on a bundled 780-genome chr05 fixture.
+The engine isn't specialized to EB-9. [`examples/finemap_eb5.py`](examples/finemap_eb5.py) points the *same* clustering and two-way contrast at chromosome 5, with a different donor, trait, and panel — *Hawaii 7998*'s foliar (not collar-rot) resistance pathway (`HA7998 → OH7536 → OH08-7663`) against a disjoint susceptible set (`OH88119`, `NC 84173`, `Brandywine`) — and recovers the published EB-5 introgression: a 56.2% reduction of the prior QTL (refined span 500 kb, matching Anderson *et al.* 2024 Table S2 to within ~0.1 kb — though the recovered interval sits ~150 kb right of the paper's exact boundaries, a threshold sensitivity at the right edge), on a bundled 780-genome chr05 fixture.
 
 Two details make it a genuine test rather than a copy of EB-9:
 

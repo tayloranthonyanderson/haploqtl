@@ -1,4 +1,4 @@
-"""haploqtl - reproducible, AI-augmented local-ancestry inference for QTL discovery.
+"""haploqtl - reproducible, typed local-ancestry inference for QTL discovery.
 
 The method groups genomes into local haplotypes along a sliding genomic window using
 Ward hierarchical clustering, with the merge-distance threshold auto-tuned per window by
