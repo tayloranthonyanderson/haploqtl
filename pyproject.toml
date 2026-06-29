@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "haploqtl"
 version = "0.10.0"
-description = "Reproducible, typed local-ancestry inference for fine-mapping QTL and predicting trait donors from genomic sequence libraries."
+description = "Typed, tested local-ancestry inference for fine-mapping QTL and predicting trait donors, with a grounded candidate-gene interpretation skill and an evaluation harness."
 readme = "README.md"
 requires-python = ">=3.11"
 license = { file = "LICENSE" }

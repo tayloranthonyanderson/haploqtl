@@ -12,7 +12,7 @@ Local-ancestry inference that turns large whole-genome sequence libraries into f
 
 `haploqtl` detects cryptic ancestral introgressions, narrows the genomic intervals of quantitative trait loci (QTL), traces those loci to their historical donor cultivars, and predicts the trait in untested gene-bank accessions — without the need for purpose-built mapping populations.
 
-It doesn't stop at mapping. Each fine-mapped interval feeds an Agent Skill that turns it into a **grounded, self-verifying candidate-gene report** — driving real genome and literature databases, then checking its own genes and citations against them — with an evaluation harness that scores that step.
+Each fine-mapped interval can then feed an Agent Skill that turns it into a candidate-gene report — grounded in live genome and literature databases and checked against them before output — with an evaluation harness for that step.
 
 > *Personal project, built on my own time and equipment using publicly available or self-collected data. Not affiliated with, funded by, or derived from any employer's work, data, or systems.*
 
@@ -115,7 +115,7 @@ An [Agent Skill](skills/qtl-candidate-gene/) (in Anthropic's `SKILL.md` format) 
 - **Candidate genes** — a shortlist of the interval's genes that could plausibly *underlie* the trait, with functions and mechanistic rationale. Narrows ~50 genes to a few hypotheses worth chasing, automating the gene-by-gene function and literature lookup a geneticist would do by hand.
 - **Selection markers** — diagnostic SNPs that *track* the trait (present in the trait-positive lines, absent from the negatives), so a breeder can select by genotype alone — **even if the causal gene is never identified.**
 
-The trait is an input, so this generalizes to any tomato QTL. What makes it usable rather than a plausible-sounding guess: the agent **drives real databases as tools** — ITAG4.1 for genes, UniProt for protein function, PubMed for the literature — and then **verifies its own draft** before returning it.
+The trait is an input, so this generalizes to any tomato QTL. The agent queries real databases — ITAG4.1 for genes, UniProt for protein function, PubMed for the literature — and verifies its draft against them before returning it.
 
 ```mermaid
 flowchart TB
@@ -159,6 +159,13 @@ haploqtl/
 │                      # tests/fixtures golden) and clustering↔legacy tests
 └── .github/workflows/ # CI: lint + format + type-check + test on Python 3.11 & 3.12
 ```
+
+## Design notes
+
+- **One set of verifiers, two roles.** The PubMed resolver, the citation-support judge, and the gene-existence check live in the skill (`skills/qtl-candidate-gene/scripts/`); the eval imports them. The skill runs them as a per-run gate; the eval runs them on a fixed item set — no duplicated logic.
+- **Deterministic by default; hermetic tests.** The gate's gene and citation-resolution checks are deterministic and run offline; the LLM support-check is opt-in (`--support-model`). The scorers and the gate take injected resolvers/judges, so the test suite runs with no network and no API key.
+- **No published leaderboard.** Model scores vary run-to-run (`temperature` isn't settable on these models), so the eval ships as a harness, not a ranking.
+- **Version-pinned provenance.** Gene models are an ITAG4.1 slice matching the paper's annotation, not a live query — exact and reproducible. UniProt and PubMed are the live integrations; NCBI calls are throttled to the anonymous rate limit, with retry.
 
 ## Citation
 
