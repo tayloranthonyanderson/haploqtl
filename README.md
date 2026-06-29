@@ -105,14 +105,20 @@ Run with `uv run python examples/finemap_eb9.py` (or `finemap_eb5.py`).
 
 ## Agent Skill: `qtl-candidate-gene`
 
-An [Agent Skill](skills/qtl-candidate-gene/) (in Anthropic's `SKILL.md` format) that interprets a fine-mapped interval the way a geneticist would — turning coordinates into biology:
+An [Agent Skill](skills/qtl-candidate-gene/) (in Anthropic's `SKILL.md` format) that takes a fine-mapped interval **plus the trait it was mapped for** and returns two distinct deliverables:
 
-1. **Genes in the interval** — from a bundled SGN **ITAG4.1** slice (SL4.0), paper-exact `Solyc` IDs + functional descriptions.
-2. **Protein function** — live **UniProt** REST query (the genes-to-function database step).
-3. **Diagnostic MAS markers** — variants present in all resistant donors and absent from all susceptible controls, computed from the VCF (reproducing the paper's contrast).
-4. **Synthesis** — a ranked, mechanistically-reasoned candidate-gene report + marker table.
+- **Candidate genes** — a shortlist of the interval's genes that could plausibly *underlie* the trait, with their functions and mechanistic rationale. Narrows ~50 genes to a few hypotheses worth chasing, automating the gene-by-gene function and literature lookup a geneticist would do by hand.
+- **Selection markers** — diagnostic SNPs that *track* the trait (present in the trait-positive lines, absent from the negatives), so a breeder can select by genotype alone — **even if the causal gene is never identified.**
+
+The trait is an input, so this generalizes to any tomato QTL. It works in four steps: **(1)** genes in the interval from SGN **ITAG4.1**; **(2)** protein function via a live **UniProt** lookup; **(3)** diagnostic markers from the VCF; **(4)** synthesis into the ranked candidate-gene report plus the marker table.
 
 On the EB-9 interval it recovers exactly the gene families the paper highlighted (potassium transporters, F-box, cation efflux, metal-tolerance, Fe(II)-oxygenase) and 185 diagnostic markers whose first position coincides with the paper's chromosome-painting boundary. See the [worked example](skills/qtl-candidate-gene/EXAMPLE.md).
+
+## Evaluation
+
+That candidate-gene step uses an LLM, and LLMs fail *quietly* — inventing genes, citing papers that don't exist, or stating a guess as fact. [`evals/`](evals/) is a small harness that measures those failures. It is **not** a correctness check — it can't tell you the model is right or that a gene is causal (both can still be wrong; candidates stay hypotheses). It cuts the *avoidable* error: that named genes really exist in the interval (ITAG4.1), that cited PMIDs resolve on PubMed, and that the model hedges what the data can't settle.
+
+The payoff is a **cleaner starting set, not an answer** — you still confirm causality by hand. Across current Claude models the gene shortlist comes back clean; citations don't (~40–50% fabricated — verify them or add a literature-search tool). Provider-agnostic; runs offline in CI via a mock; full numbers in [`evals/RESULTS.md`](evals/RESULTS.md).
 
 ## Repository layout
 
@@ -122,8 +128,9 @@ haploqtl/
 │                      # contrast + introgression + markers (interval-narrowing &
 │                      # donor-block retention), painting, accessions, cli
 ├── skills/            # qtl-candidate-gene Agent Skill (SKILL.md + scripts + references)
+├── evals/             # candidate-gene interpretation eval (faithfulness + calibration)
 ├── legacy/            # vendored, attributed reference script from the published paper
-├── data/              # bundled chr09 + chr05 fixtures (780 genomes) + names + phenotypes
+├── data/              # bundled chr09 + chr05 fixtures + ITAG4.1 GFF + names + phenotypes
 ├── examples/          # finemap_eb9.py (sharpen EB-9) + finemap_eb5.py (generalize to EB-5)
 ├── scripts/           # run_demo.sh — reproduce a minimal EB-9 result
 ├── tests/             # unit, CLI, skill, legacy-baseline, R-equivalence (tests/r +
@@ -139,7 +146,7 @@ This repository is under active development. Phases 0–2 are complete: a typed,
 - [x] **Phase 1 — Modernized core.** Reference script refactored into a typed, tested, documented `haploqtl` package with a real CLI. Two latent bugs in the reference fixed: the silhouette search no longer aborts to a fixed fallback threshold on a single degenerate distance, and the final genomic window is no longer dropped.
 - [x] **Phase 1.5 — Downstream introgression layer (R → Python).** The published downstream analysis lived entirely in R (`visualize_haplotypes.Rmd`). Ported into the typed, tested package: `contrast` (the one/two-way diagnostic contrast), `introgression` (algorithmic interval-narrowing — the original did it by eye — plus per-line donor-block retention and the fine-mapped core), and `markers` (diagnostic SNPs). Exposed as `haploqtl introgression`. Validated by **window-for-window equivalence to the original R** and a new **clustering ↔ legacy equivalence test** (identical partitions where the merge-distance agrees).
 - [x] **Phase 2 — Agent Skill.** [`qtl-candidate-gene`](skills/qtl-candidate-gene/) — interval → candidate genes (ITAG4.1) → protein function (live UniProt) → diagnostic MAS markers → breeder report. Authored in Anthropic's Agent Skill (`SKILL.md`) format.
-- [ ] **Next — Evaluation benchmark.** A small, verifiable benchmark scoring model *judgment* on the candidate-gene workflow — hallucinated genes/functions, mis-ranked candidates, misread genotypes, ungrounded citations (in design).
+- [x] **Evaluation harness** ([`evals/`](evals/)). A small, hermetically-tested harness scoring the *faithfulness and calibration* of the candidate-gene interpretation — hallucinated genes, fabricated citations, over-confident causal claims — not causal correctness. Provider-agnostic; runs offline under CI via a mock.
 
 ## Citation
 

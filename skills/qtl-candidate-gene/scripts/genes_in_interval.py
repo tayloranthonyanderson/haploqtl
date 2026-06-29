@@ -12,6 +12,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import gzip
 import json
 import re
 import sys
@@ -46,11 +47,18 @@ def _attr(attrs: str, key: str) -> str | None:
     return match.group(1) if match else None
 
 
+def _open_text(path: Path):
+    """Open a GFF for reading text, transparently handling gzip (``.gz``)."""
+    if str(path).endswith(".gz"):
+        return gzip.open(path, "rt")
+    return open(path)
+
+
 def genes_in_interval(gff_path: Path, seqid: str, start: int, end: int) -> list[Gene]:
     """Return genes overlapping ``seqid:start-end``, annotated from their mRNA descriptions."""
     genes: dict[str, Gene] = {}
     descriptions: dict[str, str] = {}
-    with open(gff_path) as handle:
+    with _open_text(gff_path) as handle:
         for line in handle:
             if line.startswith("#"):
                 continue

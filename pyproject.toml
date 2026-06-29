@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "haploqtl"
-version = "0.6.0"
+version = "0.7.0"
 description = "Reproducible, typed local-ancestry inference for fine-mapping QTL and predicting trait donors from genomic sequence libraries."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -37,6 +37,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest>=8", "ruff>=0.6", "mypy>=1.8"]
+eval = ["anthropic>=0.40"] # live eval runs only (the harness/CI are provider-agnostic)
 
 [project.scripts]
 haploqtl = "haploqtl.cli:main"
@@ -59,8 +60,9 @@ ignore = ["E501"] # line length is handled by the formatter
 
 [tool.mypy]
 python_version = "3.12"
-files = ["src/haploqtl"]
+files = ["src/haploqtl", "evals"]
 ignore_missing_imports = true # scikit-allel and scikit-learn ship no type stubs
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["."] # so tests/ can import the top-level evals/ package

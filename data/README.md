@@ -20,6 +20,12 @@ spanning the **EB-5** foliar early-blight resistance QTL, 18,558 biallelic varia
 from a different donor (*Hawaii 7998*) and susceptible set — the generalization check. Same
 reference, sources, and provenance as the chr09 fixture above.
 
+### `ITAG4.1_genes.gff3.gz`
+The full-genome **ITAG4.1** gene + mRNA models (SL4.0 assembly), filtered to gene/mRNA
+features (~2.6 MB gzipped; 34,688 genes). Used by [`evals/`](../evals/) to list the genes
+in any interval for the candidate-gene faithfulness check. Source:
+[SGN ITAG4.1 release](https://solgenomics.net/ftp/tomato_genome/annotation/ITAG4.1_release/).
+
 ### `AccessionRename.txt`
 Maps the numeric sample IDs in the VCF header to human-readable accession names.
 
