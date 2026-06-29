@@ -90,9 +90,18 @@ python scripts/verify_report.py --report draft.json --chrom ch09 --start 6245285
 
 It **drops** any candidate whose Solyc ID is not in the interval, **strips** any cited PMID that doesn't resolve on PubMed (flagging that claim to re-retrieve — it never invents a replacement), **flags** an over-confident un-hedged call, and prints a **verification stamp**. Append the stamp to the report. If PMIDs were stripped, return to Step 3, retrieve real ones for those claims, and re-verify.
 
+For the strongest check, add `--support-model <model>` (e.g. `claude-haiku-4-5-20251001`): for every PMID that resolves, the gate fetches its abstract and asks the model whether it *actually supports* the specific claim — stripping citations that are real but off-topic, and recording the supporting quote for the ones that hold. Without the flag the gate only confirms a PMID *resolves*, not that it *backs* the claim. This needs network, the `anthropic` package, and an `ANTHROPIC_API_KEY`; the rest of the gate stays deterministic and offline-capable.
+
+```bash
+python scripts/verify_report.py --report draft.json --chrom ch09 --start 62452852 --end 62950075 \
+    --support-model claude-haiku-4-5-20251001
+```
+
+The stamp then also reports *PMIDs supporting the claim*, and each surviving citation carries the abstract quote that backs it — put that quote in the report so a reader can verify it at a glance. (To read an abstract yourself: `python scripts/pubmed.py --abstract <PMID>`.)
+
 ## Output
 
-A markdown report: ranked candidates with evidence, mechanistic hypotheses, a MAS marker table, explicit caveats, and the Step 6 **verification stamp** (genes in interval · PMIDs resolved · calibration) confirming the report was grounded and self-checked. See `EXAMPLE.md` for a worked EB-9 run.
+A markdown report: ranked candidates with evidence, mechanistic hypotheses, a MAS marker table, explicit caveats, and the Step 6 **verification stamp** (genes in interval · PMIDs resolved · *PMIDs supporting the claim* · calibration) confirming the report was grounded and self-checked. See `EXAMPLE.md` for a worked EB-9 run.
 
 ## References
 - `references/data-sources.md` — data provenance (ITAG4.1, UniProt), coordinates, regenerating the gene slice, why Ensembl Plants REST is not used.

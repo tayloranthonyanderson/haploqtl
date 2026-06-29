@@ -77,3 +77,45 @@ def test_render_stamp_reports_removals():
     stamp = verify_report.render_stamp(result)
     assert "PMIDs resolved 0/1" in stamp
     assert "999" in stamp  # the stripped PMID is named for re-retrieval
+
+
+def test_strips_resolving_but_unsupported_pmid():
+    report = {
+        "candidates": [
+            {
+                "solyc_id": "Solyc09g074790",
+                "claimed_function": "F-box defense",
+                "pmids": ["111", "222"],
+            },
+        ],
+        "determinable": False,
+        "rationale": "plausible candidate",
+    }
+
+    def support(claim, pmid):  # both PMIDs resolve; only 111 actually supports the claim
+        return {"supported": pmid == "111", "evidence": "a quote" if pmid == "111" else ""}
+
+    result = verify_report.verify(
+        report, {"Solyc09g074790"}, _resolver({"111", "222"}), support_judge=support
+    )
+    kept = result["report"]["candidates"][0]
+    assert kept["pmids"] == ["111"]  # off-topic-but-real PMID stripped
+    assert kept["unsupported_pmids_removed"] == ["222"]
+    assert kept["support_evidence"] == {"111": "a quote"}
+    assert "222" in result["unsupported_pmids"]
+    assert result["stamp"]["pmids_resolved"] == "2/2"
+    assert result["stamp"]["pmids_support_claim"] == "1/2"
+    stamp = verify_report.render_stamp(result)
+    assert "PMIDs supporting the claim 1/2" in stamp
+    assert "222" in stamp
+
+
+def test_no_support_judge_leaves_stamp_without_support_line():
+    report = {
+        "candidates": [{"solyc_id": "Solyc09g074790", "pmids": ["111"]}],
+        "determinable": False,
+        "rationale": "plausible",
+    }
+    result = verify_report.verify(report, {"Solyc09g074790"}, _resolver({"111"}))
+    assert "pmids_support_claim" not in result["stamp"]  # deterministic path unchanged
+    assert "supporting the claim" not in verify_report.render_stamp(result)

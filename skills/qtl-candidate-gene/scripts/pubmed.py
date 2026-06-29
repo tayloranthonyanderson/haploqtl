@@ -112,10 +112,21 @@ def efetch_abstract(pmid: str, max_chars: int = 4000, timeout: float = 20.0) -> 
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Search PubMed for real records (NCBI).")
-    parser.add_argument("query", help="PubMed query, e.g. 'tomato F-box protein defense'")
+    parser = argparse.ArgumentParser(description="Search PubMed or fetch an abstract (NCBI).")
+    parser.add_argument(
+        "query", nargs="?", help="PubMed query, e.g. 'tomato F-box protein defense'"
+    )
     parser.add_argument("--retmax", type=int, default=5, help="max records (default 5)")
+    parser.add_argument(
+        "--abstract", metavar="PMID", help="print one record's title+abstract instead of searching"
+    )
     args = parser.parse_args(argv)
+    if args.abstract:
+        text = efetch_abstract(args.abstract)
+        sys.stdout.write((text or f"(no abstract for PMID {args.abstract})") + "\n")
+        return 0
+    if not args.query:
+        parser.error("provide a search query, or --abstract PMID")
     json.dump(pubmed_search(args.query, args.retmax), sys.stdout, indent=2)
     sys.stdout.write("\n")
     return 0

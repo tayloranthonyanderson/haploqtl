@@ -11,7 +11,7 @@ https://doi.org/10.1111/tpj.16495
 
 from __future__ import annotations
 
-__version__ = "0.9.0"
+__version__ = "0.10.0"
 
 from .accessions import load_name_map, resolve_samples
 from .cluster import WindowClustering, cluster_haplotypes, select_distance_threshold
