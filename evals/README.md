@@ -18,7 +18,7 @@ It scores **faithfulness** and **calibration**, *not* causal correctness:
 It deliberately does **not** score "did it find the true causal gene." Candidate genes
 are hypotheses, and many functional alleles are wild-species introgressions absent from
 the SL4.0 (Heinz) reference — so there is no trustworthy answer key, here or genome-wide.
-This is an eval-engineering artifact, not a claim about tomato genetics, and it ships
+It measures the model's interpretation, not the biology, and ships
 **without a published model leaderboard** — run it yourself.
 
 ## Design
@@ -27,8 +27,7 @@ Tail-interpreter: the harness precomputes the authoritative gene list for each i
 (from the bundled [`data/ITAG4.1_genes.gff3.gz`](../data/)) and asks the model to
 interpret it; verifiers score the structured answer against those facts. The scorers are
 deterministic given their inputs — they turn a model judgment into a number (a verifiable
-reward). The agentic variant (give the model the tools, score the trajectory) is future
-work.
+reward), scoring the structured answer rather than the full tool-use trajectory.
 
 Two arms share the same scoring:
 
@@ -76,7 +75,7 @@ adds citation-support checking.
 
 ## Notes
 
-- Four items is a small **demonstration** set — the harness is the artifact, not a model
+- Four items is a small **demonstration** set — the harness is the deliverable, not a model
   ranking.
 - Calibration uses a deterministic rubric (`structural_calibration`), not an LLM judge —
   by design, for reproducibility. The LLM citation-support judge is opt-in.

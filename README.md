@@ -16,12 +16,12 @@ Each fine-mapped interval can then feed an Agent Skill that turns it into a cand
 
 > *Personal project, built on my own time and equipment using publicly available or self-collected data. Not affiliated with, funded by, or derived from any employer's work, data, or systems.*
 
-> **Provenance.** This project modernizes and extends the method published in
+> **Provenance.** This project implements and extends the method published in
 > Anderson *et al.* (2024), *The Plant Journal* — [doi:10.1111/tpj.16495](https://doi.org/10.1111/tpj.16495),
 > on which I am first author. The original research scripts live at
 > [masudermann/HaplotypeAnalysis_Visualization](https://github.com/masudermann/HaplotypeAnalysis_Visualization);
 > the reference clustering script (which I authored) is vendored verbatim under [`legacy/`](legacy/)
-> and is the baseline this repository is being rebuilt around.
+> and is the baseline this implementation is validated against (see the equivalence tests in [`tests/`](tests/)).
 
 ## The method
 
@@ -43,7 +43,7 @@ flowchart LR
   U --> VG
   L --> VG
   M --> VG
-  VG --> R["Breeder-facing report + stamp"]
+  VG --> R["Candidate-gene report + stamp"]
 ```
 
 ## Quickstart
@@ -113,7 +113,7 @@ Run with `uv run python examples/finemap_eb9.py` (or `finemap_eb5.py`).
 An [Agent Skill](skills/qtl-candidate-gene/) (in Anthropic's `SKILL.md` format) that takes a fine-mapped interval **plus the trait it was mapped for** and returns two deliverables:
 
 - **Candidate genes** — a shortlist of the interval's genes that could plausibly *underlie* the trait, with functions and mechanistic rationale. Narrows ~50 genes to a few hypotheses worth chasing, automating the gene-by-gene function and literature lookup a geneticist would do by hand.
-- **Selection markers** — diagnostic SNPs that *track* the trait (present in the trait-positive lines, absent from the negatives), so a breeder can select by genotype alone — **even if the causal gene is never identified.**
+- **Selection markers** — diagnostic SNPs that *track* the trait (present in the trait-positive lines, absent from the negatives), enabling genotype-based selection **even when the causal gene is never identified** — the basis for marker-assisted breeding.
 
 The trait is an input, so this generalizes to any tomato QTL. The agent queries real databases — ITAG4.1 for genes, UniProt for protein function, PubMed for the literature — and verifies its draft against them before returning it.
 
@@ -163,7 +163,7 @@ haploqtl/
 ## Design notes
 
 - **One set of verifiers, two roles.** The PubMed resolver, the citation-support judge, and the gene-existence check live in the skill (`skills/qtl-candidate-gene/scripts/`); the eval imports them. The skill runs them as a per-run gate; the eval runs them on a fixed item set — no duplicated logic.
-- **Deterministic by default; hermetic tests.** The gate's gene and citation-resolution checks are deterministic and run offline; the LLM support-check is opt-in (`--support-model`). The scorers and the gate take injected resolvers/judges, so the test suite runs with no network and no API key.
+- **Deterministic by default; hermetic tests.** The gate's gene and citation-resolution checks are deterministic and run offline; the LLM support-check is opt-in (`--support-model`). The scorers and the gate take injected resolvers/judges, so the suite runs with no network and no API key — see [`tests/test_skill_verify.py`](tests/test_skill_verify.py) and the `tests/test_evals_*.py` files.
 - **No published leaderboard.** Model scores vary run-to-run (`temperature` isn't settable on these models), so the eval ships as a harness, not a ranking.
 - **Version-pinned provenance.** Gene models are an ITAG4.1 slice matching the paper's annotation, not a live query — exact and reproducible. UniProt and PubMed are the live integrations; NCBI calls are throttled to the anonymous rate limit, with retry.
 

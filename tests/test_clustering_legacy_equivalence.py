@@ -1,8 +1,8 @@
 """Equivalence of the modern ``haploqtl`` clustering to the legacy reference script.
 
-Nothing previously tested the new clustering against the original it was rebuilt from. This
-runs both on the bundled fixture (same window/step/d-grid) and compares them window-for-
-window. Cluster IDs are arbitrary, so partitions are compared by **adjusted Rand index**.
+This runs the package clustering and the legacy reference script on the bundled fixture
+(same window/step/d-grid) and compares them window-for-window. Cluster IDs are arbitrary,
+so partitions are compared by **adjusted Rand index**.
 Where both pick the same merge-distance ``d`` the partitions must be *identical* (ARI = 1.0);
 any divergence must coincide with a different ``d`` — i.e. the documented silhouette-abort
 bug fix, where the legacy aborts the whole search to a fixed ``d`` on one degenerate

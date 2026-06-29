@@ -1,13 +1,13 @@
 ---
 name: qtl-candidate-gene
-description: Interpret a fine-mapped QTL / introgression interval for a stated trait in tomato. Given an interval (SL4.0 coordinates) and the trait it was mapped for, lists the genes in the interval from SGN ITAG4.1, enriches them with protein function from UniProt, ranks candidate genes by plausibility for that trait, grounds every literature citation with a live PubMed search, optionally flags marker-assisted-selection (MAS) markers from a two-group phenotype contrast, then self-verifies the draft — dropping any gene not in the interval and any citation that doesn't resolve — and delivers a breeder-facing candidate-gene report with a verification stamp. Works for any tomato trait — disease resistance, fruit size/quality, color, plant architecture, abiotic-stress tolerance. Use when a user has a QTL interval plus a trait and wants candidate or causal genes, mechanistic hypotheses, or MAS/KASP markers, or wants to interpret haploqtl clustering output.
+description: Interpret a fine-mapped QTL / introgression interval for a stated trait in tomato. Given an interval (SL4.0 coordinates) and the trait it was mapped for, lists the genes in the interval from SGN ITAG4.1, enriches them with protein function from UniProt, ranks candidate genes by plausibility for that trait, grounds every literature citation with a live PubMed search, optionally flags marker-assisted-selection (MAS) markers from a two-group phenotype contrast, then self-verifies the draft — dropping any gene not in the interval and any citation that doesn't resolve — and delivers a candidate-gene report with a verification stamp. Works for any tomato trait — disease resistance, fruit size/quality, color, plant architecture, abiotic-stress tolerance. Use when a user has a QTL interval plus a trait and wants candidate or causal genes, mechanistic hypotheses, or MAS/KASP markers, or wants to interpret haploqtl clustering output.
 ---
 
 # Candidate-Gene Interpretation for Tomato QTL
 
-Turn a fine-mapped QTL interval into a ranked, mechanistically-reasoned set of candidate genes plus marker-assisted-selection (MAS) markers — the manual triage a breeder/geneticist does with a genome browser, an annotation database, and the literature, done as a repeatable workflow.
+Turn a fine-mapped QTL interval into a ranked, mechanistically-reasoned set of candidate genes plus marker-assisted-selection (MAS) markers — the manual triage a geneticist does with a genome browser, an annotation database, and the literature, done as a repeatable workflow.
 
-**Target users:** plant breeders and geneticists who have localized a trait (e.g. via `haploqtl` local-ancestry clustering or traditional QTL mapping) and need to know *which genes* are in the interval, *what they do*, and *which markers* to use for selection.
+**Target users:** anyone who has localized a trait (e.g. via `haploqtl` local-ancestry clustering or traditional QTL mapping) — geneticists, molecular biologists, and breeders — who needs to know *which genes* are in the interval, *what they do*, and *which markers* track it.
 
 ## When to use this skill
 
