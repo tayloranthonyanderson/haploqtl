@@ -1,15 +1,34 @@
-<svg width="100%" viewBox="0 0 1200 400" role="img" xmlns="http://www.w3.org/2000/svg" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Helvetica, Arial, sans-serif">
-<title>haploqtl</title><desc>EB-9 introgression decay across resistant and susceptible tomato lines, drawn to SL4.0 chromosome-9 scale, with the EB-9 interval, candidate genes, and diagnostic markers.</desc>
+<svg width="100%" viewBox="0 0 1200 464" role="img" xmlns="http://www.w3.org/2000/svg" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Helvetica, Arial, sans-serif">
+<title>haploqtl</title><desc>Local-ancestry QTL mapping plus a grounded, self-verifying candidate-gene agent. A capability rail (mapping to QTL and donor to candidate-gene agent to verified report, scored by evals) sits above the EB-9 introgression-decay chart drawn to SL4.0 chromosome-9 scale, with the EB-9 interval, candidate genes, and diagnostic markers.</desc>
 <defs><linearGradient id="bg" x1="0" y1="0" x2="0.5" y2="1"><stop offset="0" stop-color="#0c1426"/><stop offset="1" stop-color="#091016"/></linearGradient><linearGradient id="coral" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#f5805a"/><stop offset="1" stop-color="#ef5e6b"/></linearGradient></defs>
-<rect width="1200" height="400" fill="url(#bg)"/>
+<rect width="1200" height="464" fill="url(#bg)"/>
 <text x="60" y="84" font-size="56" font-weight="700" letter-spacing="-1" fill="#eaf1f8">haplo<tspan fill="#2dd4bf">qtl</tspan></text>
-<text x="62" y="112" font-size="15" fill="#9bb0c4">Local-ancestry inference for fine-mapping QTL and finding trait donors</text>
-<rect x="641" y="52" width="150" height="30" rx="15" fill="#ffffff" opacity="0.05"/><rect x="641" y="52" width="150" height="30" rx="15" fill="none" stroke="#ffffff" stroke-opacity="0.14"/>
-<circle cx="659" cy="67" r="3.5" fill="#2dd4bf"/><text x="673" y="72" font-size="13" fill="#dbe6f0">780 genomes</text>
-<rect x="805" y="52" width="150" height="30" rx="15" fill="#ffffff" opacity="0.05"/><rect x="805" y="52" width="150" height="30" rx="15" fill="none" stroke="#ffffff" stroke-opacity="0.14"/>
-<circle cx="823" cy="67" r="3.5" fill="#ef6a55"/><text x="837" y="72" font-size="13" fill="#dbe6f0">70% tighter</text>
-<rect x="969" y="52" width="175" height="30" rx="15" fill="#ffffff" opacity="0.05"/><rect x="969" y="52" width="175" height="30" rx="15" fill="none" stroke="#ffffff" stroke-opacity="0.14"/>
-<circle cx="987" cy="67" r="3.5" fill="#34d399"/><text x="1001" y="72" font-size="13" fill="#dbe6f0">185 MAS markers</text>
+<text x="62" y="112" font-size="15" fill="#9bb0c4">Local-ancestry QTL mapping → a grounded, self-verifying candidate-gene agent</text>
+<rect x="641" y="40" width="150" height="30" rx="15" fill="#ffffff" opacity="0.05"/><rect x="641" y="40" width="150" height="30" rx="15" fill="none" stroke="#ffffff" stroke-opacity="0.14"/>
+<circle cx="659" cy="55" r="3.5" fill="#2dd4bf"/><text x="673" y="60" font-size="13" fill="#dbe6f0">780 genomes</text>
+<rect x="805" y="40" width="150" height="30" rx="15" fill="#ffffff" opacity="0.05"/><rect x="805" y="40" width="150" height="30" rx="15" fill="none" stroke="#ffffff" stroke-opacity="0.14"/>
+<circle cx="823" cy="55" r="3.5" fill="#ef6a55"/><text x="837" y="60" font-size="13" fill="#dbe6f0">70% tighter</text>
+<rect x="969" y="40" width="175" height="30" rx="15" fill="#ffffff" opacity="0.05"/><rect x="969" y="40" width="175" height="30" rx="15" fill="none" stroke="#ffffff" stroke-opacity="0.14"/>
+<circle cx="987" cy="55" r="3.5" fill="#34d399"/><text x="1001" y="60" font-size="13" fill="#dbe6f0">185 MAS markers</text>
+
+<!-- capability rail -->
+<g>
+  <rect x="60" y="126" width="196" height="42" rx="8" fill="#ffffff" opacity="0.05"/><rect x="60" y="126" width="196" height="42" rx="8" fill="none" stroke="#ffffff" stroke-opacity="0.14"/>
+  <text x="72" y="146" font-size="13" fill="#dbe6f0">Local-ancestry mapping</text><text x="72" y="161" font-size="11" fill="#8aa0b4">haplotypes → fine-mapped QTL</text>
+  <text x="264" y="153" font-size="16" fill="#5f7186">→</text>
+  <rect x="284" y="126" width="176" height="42" rx="8" fill="#ffffff" opacity="0.05"/><rect x="284" y="126" width="176" height="42" rx="8" fill="none" stroke="#ffffff" stroke-opacity="0.14"/>
+  <text x="296" y="146" font-size="13" fill="#dbe6f0">QTL + donor cultivar</text><text x="296" y="161" font-size="11" fill="#8aa0b4">traced &amp; narrowed</text>
+  <text x="468" y="153" font-size="16" fill="#5f7186">→</text>
+  <rect x="488" y="126" width="262" height="42" rx="8" fill="#2dd4bf" opacity="0.08"/><rect x="488" y="126" width="262" height="42" rx="8" fill="none" stroke="#2dd4bf" stroke-opacity="0.35"/>
+  <text x="500" y="146" font-size="13" fill="#bfeee6">Candidate-gene agent</text><text x="500" y="161" font-size="11" fill="#7fc7bd">ITAG4.1 · UniProt · PubMed</text>
+  <text x="758" y="153" font-size="16" fill="#5f7186">→</text>
+  <rect x="778" y="126" width="220" height="42" rx="8" fill="#34d399" opacity="0.08"/><rect x="778" y="126" width="220" height="42" rx="8" fill="none" stroke="#34d399" stroke-opacity="0.35"/>
+  <text x="790" y="146" font-size="13" fill="#bdebd3">✓ Verified report</text><text x="790" y="161" font-size="11" fill="#84c9a3">real genes &amp; cited claims</text>
+  <text x="1012" y="150" font-size="12" fill="#7f93a6">↳ scored by <tspan fill="#9bb0c4">evals/</tspan></text>
+</g>
+
+<!-- proof: EB-9 introgression-decay chart -->
+<g transform="translate(0,64)">
 <text x="60" y="134" font-size="14" fill="#9bb0c4">Introgression decay fine-maps EB-9</text>
 <rect x="544.2" y="150" width="126.5" height="170" fill="#2dd4bf" opacity="0.10"/>
 <path d="M544.2 150 V146 H670.7 V150" fill="none" stroke="#2dd4bf" stroke-width="1"/>
@@ -42,40 +61,11 @@
 <line x1="900.0" y1="324" x2="900.0" y2="329" stroke="#2a3a4c"/><text x="900.0" y="341" text-anchor="middle" font-size="11" fill="#9bb0c4">64</text>
 <line x1="1130.0" y1="324" x2="1130.0" y2="329" stroke="#2a3a4c"/><text x="1130.0" y="341" text-anchor="middle" font-size="11" fill="#9bb0c4">65 Mb</text>
 <text x="200" y="320" text-anchor="end" font-size="11" fill="#6b7f93">SL4.0ch09</text>
-<rect x="559.6" y="354" width="2.6" height="9" fill="#34d399"/>
-<rect x="584.0" y="354" width="2.6" height="9" fill="#34d399"/>
-<rect x="617.3" y="354" width="2.6" height="9" fill="#34d399"/>
-<rect x="618.5" y="354" width="2.6" height="9" fill="#34d399"/>
-<rect x="628.1" y="354" width="2.6" height="9" fill="#34d399"/>
-<rect x="632.1" y="354" width="2.6" height="9" fill="#34d399"/>
-<rect x="639.2" y="354" width="2.6" height="9" fill="#34d399"/>
-<rect x="654.6" y="354" width="2.6" height="9" fill="#34d399"/>
+<rect x="559.6" y="354" width="2.6" height="9" fill="#34d399"/><rect x="584.0" y="354" width="2.6" height="9" fill="#34d399"/><rect x="617.3" y="354" width="2.6" height="9" fill="#34d399"/><rect x="618.5" y="354" width="2.6" height="9" fill="#34d399"/><rect x="628.1" y="354" width="2.6" height="9" fill="#34d399"/><rect x="632.1" y="354" width="2.6" height="9" fill="#34d399"/><rect x="639.2" y="354" width="2.6" height="9" fill="#34d399"/><rect x="654.6" y="354" width="2.6" height="9" fill="#34d399"/>
 <text x="690" y="362" font-size="11" fill="#9bb0c4">candidate genes (8): F-box, K+ transporters, oxidoreductases</text>
-<rect x="544.2" y="375" width="1.8" height="8" fill="#4fd1c5"/>
-<rect x="549.7" y="375" width="1.8" height="8" fill="#4fd1c5"/>
-<rect x="555.2" y="375" width="1.8" height="8" fill="#4fd1c5"/>
-<rect x="560.7" y="375" width="1.8" height="8" fill="#4fd1c5"/>
-<rect x="566.2" y="375" width="1.8" height="8" fill="#4fd1c5"/>
-<rect x="571.7" y="375" width="1.8" height="8" fill="#4fd1c5"/>
-<rect x="577.2" y="375" width="1.8" height="8" fill="#4fd1c5"/>
-<rect x="582.7" y="375" width="1.8" height="8" fill="#4fd1c5"/>
-<rect x="588.2" y="375" width="1.8" height="8" fill="#4fd1c5"/>
-<rect x="593.7" y="375" width="1.8" height="8" fill="#4fd1c5"/>
-<rect x="599.2" y="375" width="1.8" height="8" fill="#4fd1c5"/>
-<rect x="604.7" y="375" width="1.8" height="8" fill="#4fd1c5"/>
-<rect x="610.2" y="375" width="1.8" height="8" fill="#4fd1c5"/>
-<rect x="615.7" y="375" width="1.8" height="8" fill="#4fd1c5"/>
-<rect x="621.2" y="375" width="1.8" height="8" fill="#4fd1c5"/>
-<rect x="626.7" y="375" width="1.8" height="8" fill="#4fd1c5"/>
-<rect x="632.2" y="375" width="1.8" height="8" fill="#4fd1c5"/>
-<rect x="637.7" y="375" width="1.8" height="8" fill="#4fd1c5"/>
-<rect x="643.2" y="375" width="1.8" height="8" fill="#4fd1c5"/>
-<rect x="648.7" y="375" width="1.8" height="8" fill="#4fd1c5"/>
-<rect x="654.2" y="375" width="1.8" height="8" fill="#4fd1c5"/>
-<rect x="659.7" y="375" width="1.8" height="8" fill="#4fd1c5"/>
-<rect x="665.2" y="375" width="1.8" height="8" fill="#4fd1c5"/>
-<rect x="670.7" y="375" width="1.8" height="8" fill="#4fd1c5"/>
+<rect x="544.2" y="375" width="1.8" height="8" fill="#4fd1c5"/><rect x="555.2" y="375" width="1.8" height="8" fill="#4fd1c5"/><rect x="566.2" y="375" width="1.8" height="8" fill="#4fd1c5"/><rect x="577.2" y="375" width="1.8" height="8" fill="#4fd1c5"/><rect x="588.2" y="375" width="1.8" height="8" fill="#4fd1c5"/><rect x="599.2" y="375" width="1.8" height="8" fill="#4fd1c5"/><rect x="610.2" y="375" width="1.8" height="8" fill="#4fd1c5"/><rect x="621.2" y="375" width="1.8" height="8" fill="#4fd1c5"/><rect x="632.2" y="375" width="1.8" height="8" fill="#4fd1c5"/><rect x="643.2" y="375" width="1.8" height="8" fill="#4fd1c5"/><rect x="654.2" y="375" width="1.8" height="8" fill="#4fd1c5"/><rect x="665.2" y="375" width="1.8" height="8" fill="#4fd1c5"/>
 <text x="690" y="382" font-size="11" fill="#9bb0c4">185 candidate MAS markers — SNPs diagnostic of the EB-9 haplotype</text>
 <rect x="60" y="356" width="14" height="10" rx="2" fill="url(#coral)"/><text x="80" y="365" font-size="11" fill="#9bb0c4">shares Devon Surprise haplotype</text>
 <text x="60" y="392" font-size="11" fill="#5f7186">Method: Anderson et al. 2024 · The Plant Journal · doi:10.1111/tpj.16495</text>
+</g>
 </svg>
