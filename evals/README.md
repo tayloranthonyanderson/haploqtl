@@ -37,6 +37,12 @@ Two arms share the same scoring:
   E-utilities) and instructed to cite only PMIDs the tool returns, so citations are
   grounded by construction rather than recalled.
 
+**Same verifiers as the skill, run as a benchmark.** The PubMed resolver and the optional
+citation-support judge live in the skill (`skills/qtl-candidate-gene/scripts/pubmed.py`,
+`cite_support.py`) and are imported here — the skill runs them as a per-run *guardrail* (its
+Step 6 verify gate); this harness runs them on a fixed item set as a *measurement*. One code
+path, two roles.
+
 ## Items
 
 [`items.jsonl`](items.jsonl) — 4 `(trait, interval)` items across 3 chromosomes and 3

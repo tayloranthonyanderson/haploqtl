@@ -18,8 +18,10 @@ For intervals outside the bundled regions, pass a full ITAG4.1 GFF3 to `genes_in
 - `gene_function.py` queries **UniProtKB** (`https://rest.uniprot.org`) for the tomato proteome (`organism_id:4081`).
 - UniProt entries cross-reference the ITAG/EnsemblPlants `Solyc` transcript IDs, so a free-text search on the base Solyc ID (version stripped) resolves the entry. Not every ITAG gene is in UniProt; missing entries return `null` and the workflow falls back to the ITAG4.1 description.
 
-## Literature — PubMed
-- Look up supporting literature in PubMed for Step 3.
+## Literature — PubMed (live, NCBI E-utilities)
+- `pubmed.py` searches PubMed (esearch + esummary) for Step 3, returning real `{pmid, title}` records so citations are grounded, not recalled from memory.
+- The same module backs the Step 6 verify gate: `pmid_exists` (esummary) checks a cited PMID resolves; `efetch_abstract` + `cite_support.py` run the optional `--support-model` check that the abstract actually supports the claim.
+- Requests are throttled to NCBI's anonymous 3 req/s limit (with retry), so a real PMID isn't miscounted as missing under burst load. Stdlib-only; `cite_support` imports `anthropic` lazily and only when `--support-model` is used.
 
 ## Why not Ensembl Plants REST?
 A live Ensembl Plants region query would be a natural fit, but as of this writing the EnsemblGenomes REST host (`rest.ensemblgenomes.org`) is not resolving, and the main `rest.ensembl.org` does not serve plant species (`solanum_lycopersicum` is unknown there). The authoritative, version-exact path is therefore the bundled SGN ITAG4.1 slice; UniProt provides the live-database integration.

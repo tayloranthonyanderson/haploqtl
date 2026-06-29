@@ -1,7 +1,9 @@
 # Worked example — EB-9 collar-rot resistance (chr09)
 
 A complete run of the skill on the **EB-9** interval `ch09:62,452,852-63,002,852` (the refined
-boundary from Anderson et al. 2024, donor *Devon Surprise*), using the repo's bundled fixture.
+boundary from Anderson et al. 2024, donor *Devon Surprise*), trait = *early-blight collar rot*,
+using the repo's bundled fixture. The point of the example is the last step: the report is
+**grounded** (real genes, real citations) and **self-verified** before it ships.
 
 ## Step 1 — Genes in the interval
 ```bash
@@ -37,6 +39,20 @@ python scripts/gene_function.py Solyc09g074790
 ]
 ```
 
+## Step 3 — Retrieve literature (live PubMed)
+```bash
+python scripts/pubmed.py "F-box protein plant immunity defense ubiquitin" --retmax 3
+```
+```json
+[
+  {"pmid": "42010305", "title": "Salicylic acid modulates its catabolic enzymes via proteasomal degradation linked to SCF..."},
+  {"pmid": "41288434", "title": "Viral Silencing Suppressor Activity in Plants Modifies Aphid Antiviral Immunity..."},
+  {"pmid": "40810633", "title": "Post-Translational Modifications of TOE3 Regulate Antiviral Defense in Tobacco."}
+]
+```
+Only PMIDs the search returns may be cited — never one recalled from memory. (Run the same
+query per candidate family; the K⁺-transporter draft below cites `12481099` from its own search.)
+
 ## Step 4 — Diagnostic MAS markers
 ```bash
 python scripts/diagnostic_variants.py --vcf ../../data/SL4.0ch09_subset.vcf.gz \
@@ -54,22 +70,51 @@ The first marker, `62,599,611`, coincides with the paper's pairwise chromosome-p
 bound for EB-9 (`62,599,611–62,945,798`) — an independent check that the markers track the real
 introgression.
 
-## Step 5 — Synthesized candidate-gene report (example)
+## Step 5 — Synthesize the draft report
+Rank candidates for the trait, citing only the PMIDs retrieved in Step 3. As a JSON draft:
 
-**EB-9 (chr09:62.45–63.00 Mb), donor Devon Surprise — candidate genes for collar-rot resistance**
+```json
+{
+  "candidates": [
+    {"solyc_id": "Solyc09g074790",
+     "claimed_function": "Potassium transporter; K+ flux drives stomatal closure, a front-line defense against foliar/stem pathogens",
+     "pmids": ["12481099"], "confidence": "low"},
+    {"solyc_id": "Solyc09g074510",
+     "claimed_function": "Tubby-like F-box protein; ubiquitin-mediated turnover in hormone/defense signaling",
+     "pmids": ["42010305", "41288434"], "confidence": "low"}
+  ],
+  "determinable": false,
+  "rationale": "Several plausible candidates; co-location is not causation, functional validation required."
+}
+```
 
-1. **Potassium transporters (`Solyc09g074790/074800/074820`)** — three tandem K⁺ transporters
-   (UniProt: ion transport, membrane). K⁺ flux drives stomatal closure, a front-line defense
-   against foliar/stem pathogens; a strong, mechanistically coherent candidate for quantitative
-   resistance.
-2. **F-box proteins (`Solyc09g074510`, `Solyc09g160100`)** — ubiquitin-mediated turnover in
-   hormone/defense signaling; plausible regulators of a defense response.
-3. **Metal tolerance / cation efflux (`Solyc09g074750`, `Solyc09g074740`)** — metal homeostasis
-   at the infection site; secondary candidates.
-4. **2OG/Fe(II) oxygenase (`Solyc09g074920`)** — defense-related secondary metabolism; secondary.
+## Step 6 — Verify the report (gate before delivery)
+```bash
+python scripts/verify_report.py --report draft.json --chrom ch09 --start 62452852 --end 63002852 \
+    --support-model claude-haiku-4-5-20251001
+```
+Actual output of this run:
 
-**MAS markers:** 185 diagnostic SNPs (resistant-fixed, susceptible-absent); see table above.
-Markers nearest the K⁺-transporter cluster are the most useful for selection.
+```
+**Verification** — genes in interval 2/2 · PMIDs resolved 3/3 · PMIDs supporting the claim 2/3 · calibration: ok
+- removed (resolve but don't support the claim): 12481099 — re-retrieve for those claims
+```
 
-**Caveats:** co-location is not causation; candidates are ITAG4.1/SL4.0; quantitative resistance
-is unlikely to be a canonical R gene. Expression/functional work is needed to confirm causality.
+What happened, and why it matters:
+
+- **Both genes are real** in the interval (2/2) and **all 3 PMIDs resolve** (3/3) — no hallucinated
+  IDs, no fabricated citations.
+- The K⁺-transporter citation `12481099` resolves but its abstract is about calcium/ABA elicitor
+  signaling, **not** a K⁺-transporter role in defense — so the support check **stripped it** and
+  flagged the claim to re-retrieve. (Resolving ≠ supporting; this is the check that catches a
+  real-but-off-topic citation.)
+- The two F-box citations **survived with verbatim supporting quotes** attached to the report, e.g.
+  `42010305`: *"…DMR6-ASSOCIATED F-BOX 1 (DAF1)…SCF-type E3 ligase-mediated proteasomal turnover of
+  DMR6…modulating SA-mediated cell death."*
+
+The delivered report carries that stamp, so a reader sees at a glance that every gene is in the
+interval and every surviving citation actually backs its claim.
+
+**Caveats** (always stated): co-location is not causation; candidates are ITAG4.1/SL4.0; a
+quantitative QTL is unlikely to be a canonical R gene. Expression/functional work confirms causality
+— the skill produces a vetted starting set, not an answer.

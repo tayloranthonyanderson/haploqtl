@@ -12,6 +12,8 @@ Local-ancestry inference that turns large whole-genome sequence libraries into f
 
 `haploqtl` detects cryptic ancestral introgressions, narrows the genomic intervals of quantitative trait loci (QTL), traces those loci to their historical donor cultivars, and predicts the trait in untested gene-bank accessions — without the need for purpose-built mapping populations.
 
+It doesn't stop at mapping. Each fine-mapped interval feeds an Agent Skill that turns it into a **grounded, self-verifying candidate-gene report** — driving real genome and literature databases, then checking its own genes and citations against them — with an evaluation harness that scores that step.
+
 > *Personal project, built on my own time and equipment using publicly available or self-collected data. Not affiliated with, funded by, or derived from any employer's work, data, or systems.*
 
 > **Provenance.** This project modernizes and extends the method published in
@@ -106,14 +108,14 @@ Two runnable examples go further, entirely from the bundled data (each script's 
 
 Run with `uv run python examples/finemap_eb9.py` (or `finemap_eb5.py`).
 
-## Agent Skill: `qtl-candidate-gene`
+## Candidate-gene interpretation (Agent Skill + eval)
 
-An [Agent Skill](skills/qtl-candidate-gene/) (in Anthropic's `SKILL.md` format) that takes a fine-mapped interval **plus the trait it was mapped for** and returns two distinct deliverables:
+An [Agent Skill](skills/qtl-candidate-gene/) (in Anthropic's `SKILL.md` format) that takes a fine-mapped interval **plus the trait it was mapped for** and returns two deliverables:
 
-- **Candidate genes** — a shortlist of the interval's genes that could plausibly *underlie* the trait, with their functions and mechanistic rationale. Narrows ~50 genes to a few hypotheses worth chasing, automating the gene-by-gene function and literature lookup a geneticist would do by hand.
+- **Candidate genes** — a shortlist of the interval's genes that could plausibly *underlie* the trait, with functions and mechanistic rationale. Narrows ~50 genes to a few hypotheses worth chasing, automating the gene-by-gene function and literature lookup a geneticist would do by hand.
 - **Selection markers** — diagnostic SNPs that *track* the trait (present in the trait-positive lines, absent from the negatives), so a breeder can select by genotype alone — **even if the causal gene is never identified.**
 
-The trait is an input, so this generalizes to any tomato QTL. What makes it usable rather than a plausible-sounding guess: the agent **drives real databases as tools** — ITAG4.1 for the genes, UniProt for protein function, PubMed for the literature — and then **verifies its own draft** before returning it.
+The trait is an input, so this generalizes to any tomato QTL. What makes it usable rather than a plausible-sounding guess: the agent **drives real databases as tools** — ITAG4.1 for genes, UniProt for protein function, PubMed for the literature — and then **verifies its own draft** before returning it.
 
 ```mermaid
 flowchart TB
@@ -129,22 +131,16 @@ flowchart TB
   IN --> S1
   S4 --> S5["5 · Synthesize: rank candidates, cite retrieved PMIDs"]
   S5 --> VG{"6 · Verify gate"}
-  VG -->|"drop hallucinated genes<br/>strip non-resolving PMIDs"| S5
-  VG -->|pass| OUT["Report + verification stamp<br/>(grounded, self-checked)"]
-  VG -.->|"same deterministic checks"| EV["evals/ — offline benchmark<br/>that measures this gate"]
+  VG -->|"drop hallucinated genes · strip dead<br/>and unsupported PMIDs · flag overconfidence"| S5
+  VG -->|pass| OUT["Report + stamp<br/>(grounded, cited, self-checked)"]
+  VG -.->|"same verifiers, run as a benchmark"| EV["evals/"]
 ```
 
-**Grounding by construction.** Step 3 retrieves real PMIDs from PubMed instead of recalling them from memory (recalled citations are frequently fabricated). Step 6 is a deterministic **verify gate**: it drops any candidate gene not actually in the interval, strips any cited PMID that doesn't resolve on PubMed (sending that claim back for re-retrieval — it never invents a replacement), flags an over-confident un-hedged call, and stamps the report. Those are the *same* checks the [evaluation harness](#evaluation) scores — run here as a per-run guardrail instead of an offline benchmark.
+**Grounding by construction.** Step 3 retrieves real PMIDs from PubMed instead of recalling them from memory (recalled citations are frequently fabricated). The Step 6 **verify gate** then drops any gene not in the interval, strips any cited PMID that doesn't resolve on PubMed, optionally checks with an LLM that each abstract actually *supports* its claim — keeping a verbatim quote for the ones that do — flags an over-confident call, and stamps the report. It never invents a replacement: a stripped citation is sent back to Step 3.
+
+**The eval is those same checks, measured.** [`evals/`](evals/) runs the verifiers as an offline benchmark rather than a per-run guardrail — **closed-book** (cite from memory) vs **retrieval-augmented** (live PubMed tool), scoring gene-existence, citation-grounding, and calibration. It is deliberately **not** a correctness check (candidates stay hypotheses; co-location isn't causation) and ships without a leaderboard, since per-run scores vary. One set of verifiers, two roles.
 
 On the EB-9 interval it recovers exactly the gene families the paper highlighted (potassium transporters, F-box, cation efflux, metal-tolerance, Fe(II)-oxygenase) and 185 diagnostic markers whose first position coincides with the paper's chromosome-painting boundary. See the [worked example](skills/qtl-candidate-gene/EXAMPLE.md).
-
-## Evaluation
-
-That candidate-gene step uses an LLM, and LLMs fail *quietly* — inventing genes, citing papers that don't exist, or stating a guess as fact. [`evals/`](evals/) is a small harness that measures those failures. It is **not** a correctness check — it can't tell you the model is right or that a gene is causal (both can still be wrong; candidates stay hypotheses). It scores the *avoidable* error: that named genes really exist in the interval (ITAG4.1), that cited PMIDs resolve on PubMed, and that the model hedges what the data can't settle.
-
-It runs two ways on the same scoring: **closed-book**, where the model cites from memory, and **retrieval-augmented**, where it grounds citations with a live PubMed search tool. Provider-agnostic; runs offline in CI via a mock. The harness is the artifact here — it ships without a published model leaderboard, since per-run scores vary and ranking models isn't the point. Run it yourself with your own key.
-
-The skill runs these *same* checks inline as its Step 6 [verify gate](#agent-skill-qtl-candidate-gene) — so the harness and the skill share one set of verifiers: one as an offline benchmark, one as a per-run guardrail on every report.
 
 ## Repository layout
 
