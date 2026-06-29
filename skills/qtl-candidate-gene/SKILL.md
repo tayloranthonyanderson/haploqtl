@@ -1,6 +1,6 @@
 ---
 name: qtl-candidate-gene
-description: Interpret a fine-mapped QTL / introgression interval for a stated trait in tomato. Given an interval (SL4.0 coordinates) and the trait it was mapped for, lists the genes in the interval from SGN ITAG4.1, enriches them with protein function from UniProt, ranks candidate genes by plausibility for that trait, optionally flags marker-assisted-selection (MAS) markers from a two-group phenotype contrast, and drafts a breeder-facing candidate-gene report. Works for any tomato trait — disease resistance, fruit size/quality, color, plant architecture, abiotic-stress tolerance. Use when a user has a QTL interval plus a trait and wants candidate or causal genes, mechanistic hypotheses, or MAS/KASP markers, or wants to interpret haploqtl clustering output.
+description: Interpret a fine-mapped QTL / introgression interval for a stated trait in tomato. Given an interval (SL4.0 coordinates) and the trait it was mapped for, lists the genes in the interval from SGN ITAG4.1, enriches them with protein function from UniProt, ranks candidate genes by plausibility for that trait, grounds every literature citation with a live PubMed search, optionally flags marker-assisted-selection (MAS) markers from a two-group phenotype contrast, then self-verifies the draft — dropping any gene not in the interval and any citation that doesn't resolve — and delivers a breeder-facing candidate-gene report with a verification stamp. Works for any tomato trait — disease resistance, fruit size/quality, color, plant architecture, abiotic-stress tolerance. Use when a user has a QTL interval plus a trait and wants candidate or causal genes, mechanistic hypotheses, or MAS/KASP markers, or wants to interpret haploqtl clustering output.
 ---
 
 # Candidate-Gene Interpretation for Tomato QTL
@@ -30,9 +30,10 @@ The trait can be anything mapped in tomato — disease resistance, fruit size/qu
 ```
 [ ] Step 1  Genes in the interval        (offline, ITAG4.1)
 [ ] Step 2  Protein function             (live UniProt)        -- needs network
-[ ] Step 3  Literature context           (PubMed)              -- optional
+[ ] Step 3  Retrieve literature          (live PubMed)         -- needs network
 [ ] Step 4  Diagnostic MAS markers       (offline, from VCF)   -- if accessions given
 [ ] Step 5  Synthesize candidate report  (reasoning)
+[ ] Step 6  Verify + stamp               (PubMed + ITAG4.1)    -- gate before delivery
 ```
 
 ### Step 1 — Genes in the interval
@@ -53,8 +54,14 @@ python scripts/gene_function.py Solyc09g074790 Solyc09g074510
 
 **DECISION POINT:** this requires network access. If offline, skip and rely on the ITAG4.1 descriptions from Step 1. Not every Solyc gene has a UniProt entry; `null` fields are expected and fine.
 
-### Step 3 — Literature context (optional)
-If you have PubMed access, search for evidence linking the candidate gene families (Step 1–2) to **the trait** — e.g. for disease resistance *"tomato F-box protein defense Alternaria"*; for fruit size *"tomato cell number regulator fruit weight"*. Cite PMIDs in the report. **Only cite PMIDs you actually retrieved** — PMIDs produced from model memory are frequently fabricated; verify each, or use a PubMed retrieval tool.
+### Step 3 — Retrieve literature (PubMed)
+Search PubMed for evidence linking the candidate gene families (Step 1–2) to **the trait** — e.g. for disease resistance *"tomato F-box protein defense Alternaria"*; for fruit size *"tomato cell number regulator fruit weight"*:
+
+```bash
+python scripts/pubmed.py "tomato F-box protein defense Alternaria" --retmax 5
+```
+
+Returns real `{pmid, title}` records from NCBI E-utilities. **Cite only PMIDs this returns — never one recalled from memory** (recalled PMIDs are frequently fabricated). The Step 6 gate strips any cited PMID that doesn't resolve, so memory-citations get caught — but retrieve up front so the claim keeps its evidence. Needs network; if truly offline, cite no PMIDs rather than guessing — the report still stands on the ITAG4.1 + UniProt evidence.
 
 ### Step 4 — Diagnostic MAS markers (if accessions provided)
 Find variants whose allele is present in one phenotype group and absent from the contrasting group — diagnostic markers for marker-assisted selection. The two groups are defined by the trait (resistant vs susceptible for a disease; high vs low for a quantitative trait). The script's flags are named `--resistant`/`--susceptible` for the canonical disease case, but they simply mean "carries the trait allele" vs "does not":
@@ -69,14 +76,23 @@ With no group flags the defaults reproduce the EB-9 contrast from Anderson et al
 
 ### Step 5 — Synthesize the candidate-gene report
 Using `references/interpretation-guide.md`, reason over the assembled evidence and produce a report:
-1. **Ranked candidate genes** — weight gene families plausibly linked to **the stated trait** above housekeeping genes; justify each with its function + literature. Match the families to the trait (don't default to disease): e.g. disease resistance → R-genes/NBS-LRR, receptor-like kinases, F-box/ubiquitin signaling, defense transporters/TFs; fruit size/quality → cell-number/expansion regulators, invertases and sugar/acid transport, hormone signaling; abiotic stress → transporters, LEA/dehydrins, stress TFs. See `references/interpretation-guide.md`.
+1. **Ranked candidate genes** — name only genes from Step 1 and cite only PMIDs retrieved in Step 3; weight gene families plausibly linked to **the stated trait** above housekeeping genes; justify each with its function + literature. Match the families to the trait (don't default to disease): e.g. disease resistance → R-genes/NBS-LRR, receptor-like kinases, F-box/ubiquitin signaling, defense transporters/TFs; fruit size/quality → cell-number/expansion regulators, invertases and sugar/acid transport, hormone signaling; abiotic stress → transporters, LEA/dehydrins, stress TFs. See `references/interpretation-guide.md`.
 2. **Mechanistic hypothesis** per top candidate (how it could plausibly affect the trait).
 3. **MAS markers** — the diagnostic marker table from Step 4, ready for assay design.
 4. **Caveats** — overlapping loci, annotation version, that interval co-location is not causation.
 
+### Step 6 — Verify the report (gate before delivery)
+Run the deterministic gate on your draft before returning it. Save the draft as a JSON object (the `candidates` / `determinable` / `rationale` structure) and check it against the interval and PubMed:
+
+```bash
+python scripts/verify_report.py --report draft.json --chrom ch09 --start 62452852 --end 62950075
+```
+
+It **drops** any candidate whose Solyc ID is not in the interval, **strips** any cited PMID that doesn't resolve on PubMed (flagging that claim to re-retrieve — it never invents a replacement), **flags** an over-confident un-hedged call, and prints a **verification stamp**. Append the stamp to the report. If PMIDs were stripped, return to Step 3, retrieve real ones for those claims, and re-verify.
+
 ## Output
 
-A markdown report: ranked candidates with evidence, mechanistic hypotheses, a MAS marker table, and explicit caveats. See `EXAMPLE.md` for a worked EB-9 run.
+A markdown report: ranked candidates with evidence, mechanistic hypotheses, a MAS marker table, explicit caveats, and the Step 6 **verification stamp** (genes in interval · PMIDs resolved · calibration) confirming the report was grounded and self-checked. See `EXAMPLE.md` for a worked EB-9 run.
 
 ## References
 - `references/data-sources.md` — data provenance (ITAG4.1, UniProt), coordinates, regenerating the gene slice, why Ensembl Plants REST is not used.
