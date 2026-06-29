@@ -33,12 +33,15 @@ flowchart LR
   C --> H["Local haplotypes"]
   H --> Q["Fine-mapped QTL + introgression decay"]
   Q --> S["qtl-candidate-gene skill"]
-  S --> G["Genes - ITAG4.1"]
-  S --> U["Function - UniProt"]
+  S --> G["Genes · ITAG4.1"]
+  S --> U["Function · UniProt"]
+  S --> L["Literature · PubMed"]
   S --> M["Diagnostic MAS markers"]
-  G --> R["Breeder-facing report"]
-  U --> R
-  M --> R
+  G --> VG{"Verify gate"}
+  U --> VG
+  L --> VG
+  M --> VG
+  VG --> R["Breeder-facing report + stamp"]
 ```
 
 ## Quickstart
@@ -110,7 +113,28 @@ An [Agent Skill](skills/qtl-candidate-gene/) (in Anthropic's `SKILL.md` format) 
 - **Candidate genes** — a shortlist of the interval's genes that could plausibly *underlie* the trait, with their functions and mechanistic rationale. Narrows ~50 genes to a few hypotheses worth chasing, automating the gene-by-gene function and literature lookup a geneticist would do by hand.
 - **Selection markers** — diagnostic SNPs that *track* the trait (present in the trait-positive lines, absent from the negatives), so a breeder can select by genotype alone — **even if the causal gene is never identified.**
 
-The trait is an input, so this generalizes to any tomato QTL. It works in four steps: **(1)** genes in the interval from SGN **ITAG4.1**; **(2)** protein function via a live **UniProt** lookup; **(3)** diagnostic markers from the VCF; **(4)** synthesis into the ranked candidate-gene report plus the marker table.
+The trait is an input, so this generalizes to any tomato QTL. What makes it usable rather than a plausible-sounding guess: the agent **drives real databases as tools** — ITAG4.1 for the genes, UniProt for protein function, PubMed for the literature — and then **verifies its own draft** before returning it.
+
+```mermaid
+flowchart TB
+  IN["Input: interval + trait (+ VCF)"]
+  subgraph TOOLS["Agent drives real databases as tools"]
+    direction TB
+    S1["1 · Genes in interval — ITAG4.1"]
+    S2["2 · Protein function — UniProt (live)"]
+    S3["3 · Retrieve literature — PubMed (live)"]
+    S4["4 · Diagnostic MAS markers — VCF"]
+    S1 --> S2 --> S3 --> S4
+  end
+  IN --> S1
+  S4 --> S5["5 · Synthesize: rank candidates, cite retrieved PMIDs"]
+  S5 --> VG{"6 · Verify gate"}
+  VG -->|"drop hallucinated genes<br/>strip non-resolving PMIDs"| S5
+  VG -->|pass| OUT["Report + verification stamp<br/>(grounded, self-checked)"]
+  VG -.->|"same deterministic checks"| EV["evals/ — offline benchmark<br/>that measures this gate"]
+```
+
+**Grounding by construction.** Step 3 retrieves real PMIDs from PubMed instead of recalling them from memory (recalled citations are frequently fabricated). Step 6 is a deterministic **verify gate**: it drops any candidate gene not actually in the interval, strips any cited PMID that doesn't resolve on PubMed (sending that claim back for re-retrieval — it never invents a replacement), flags an over-confident un-hedged call, and stamps the report. Those are the *same* checks the [evaluation harness](#evaluation) scores — run here as a per-run guardrail instead of an offline benchmark.
 
 On the EB-9 interval it recovers exactly the gene families the paper highlighted (potassium transporters, F-box, cation efflux, metal-tolerance, Fe(II)-oxygenase) and 185 diagnostic markers whose first position coincides with the paper's chromosome-painting boundary. See the [worked example](skills/qtl-candidate-gene/EXAMPLE.md).
 
@@ -119,6 +143,8 @@ On the EB-9 interval it recovers exactly the gene families the paper highlighted
 That candidate-gene step uses an LLM, and LLMs fail *quietly* — inventing genes, citing papers that don't exist, or stating a guess as fact. [`evals/`](evals/) is a small harness that measures those failures. It is **not** a correctness check — it can't tell you the model is right or that a gene is causal (both can still be wrong; candidates stay hypotheses). It scores the *avoidable* error: that named genes really exist in the interval (ITAG4.1), that cited PMIDs resolve on PubMed, and that the model hedges what the data can't settle.
 
 It runs two ways on the same scoring: **closed-book**, where the model cites from memory, and **retrieval-augmented**, where it grounds citations with a live PubMed search tool. Provider-agnostic; runs offline in CI via a mock. The harness is the artifact here — it ships without a published model leaderboard, since per-run scores vary and ranking models isn't the point. Run it yourself with your own key.
+
+The skill runs these *same* checks inline as its Step 6 [verify gate](#agent-skill-qtl-candidate-gene) — so the harness and the skill share one set of verifiers: one as an offline benchmark, one as a per-run guardrail on every report.
 
 ## Repository layout
 
@@ -137,16 +163,6 @@ haploqtl/
 │                      # tests/fixtures golden) and clustering↔legacy tests
 └── .github/workflows/ # CI: lint + format + type-check + test on Python 3.11 & 3.12
 ```
-
-## Status & roadmap
-
-This repository is under active development. Phases 0–2 are complete: a typed, tested `haploqtl` package with a real CLI, plus an Agent Skill that interprets a fine-mapped interval into candidate genes and MAS markers — all reproducible from a clean `git clone`.
-
-- [x] **Phase 0 — Foundations & provenance.** Packaged project, pinned environment, CI, bundled chr09 fixture, reproducible demo, vendored reference implementation.
-- [x] **Phase 1 — Modernized core.** Reference script refactored into a typed, tested, documented `haploqtl` package with a real CLI. Two latent bugs in the reference fixed: the silhouette search no longer aborts to a fixed fallback threshold on a single degenerate distance, and the final genomic window is no longer dropped.
-- [x] **Phase 1.5 — Downstream introgression layer (R → Python).** The published downstream analysis lived entirely in R (`visualize_haplotypes.Rmd`). Ported into the typed, tested package: `contrast` (the one/two-way diagnostic contrast), `introgression` (algorithmic interval-narrowing — the original did it by eye — plus per-line donor-block retention and the fine-mapped core), and `markers` (diagnostic SNPs). Exposed as `haploqtl introgression`. Validated by **window-for-window equivalence to the original R** and a new **clustering ↔ legacy equivalence test** (identical partitions where the merge-distance agrees).
-- [x] **Phase 2 — Agent Skill.** [`qtl-candidate-gene`](skills/qtl-candidate-gene/) — interval → candidate genes (ITAG4.1) → protein function (live UniProt) → diagnostic MAS markers → breeder report. Authored in Anthropic's Agent Skill (`SKILL.md`) format.
-- [x] **Evaluation harness** ([`evals/`](evals/)). A small, hermetically-tested harness scoring the *faithfulness and calibration* of the candidate-gene interpretation — hallucinated genes, fabricated citations, over-confident causal claims — not causal correctness. Runs closed-book or retrieval-augmented (a live PubMed search tool grounds the citations); provider-agnostic, with an offline mock under CI.
 
 ## Citation
 
